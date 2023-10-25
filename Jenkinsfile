@@ -4,13 +4,12 @@ pipeline {
     stages {
         stage('Check') {
             steps {
-                git branch: 'develop',credentialsId:'0-shingo', url:'https://github.com/Spharos-final-project-WOOYANO/Reservation'
+                git branch: 'develop',credentialsId:'jenkins-github-access-token', url:'https://github.com/Spharos-final-project-WOOYANO/Reservation'
             }
         }
         stage('Build'){
             steps{
                 sh '''
-                    cd Reservation
                     chmod +x ./gradlew
                     ./gradlew build -x test
                 '''
@@ -19,7 +18,6 @@ pipeline {
         stage('DockerSize'){
             steps {
                 sh '''
-                    cd server
                     docker stop Reservation-Service || true
                     docker rm Reservation-Service || true
                     docker rmi Reservation-Service-Img || true
