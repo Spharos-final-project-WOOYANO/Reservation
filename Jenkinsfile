@@ -18,16 +18,16 @@ pipeline {
         stage('DockerSize'){
             steps {
                 sh '''
-                    docker stop Reservation-Service || true
-                    docker rm Reservation-Service || true
-                    docker rmi Reservation-Service-Img || true
-                    docker build -t Reservation-Service-Img:latest .
+                    docker stop reservation-service || true
+                    docker rm reservation-service || true
+                    docker rmi reservation-service-img || true
+                    docker build -t reservation-service-img:latest .
                 '''
             }
         }
         stage('Deploy'){
             steps{
-                sh 'docker run -d --name Reservation-Service -p 8080:8000 Reservation-Service-Img'
+                sh 'docker run -d --name reservation-service -p 8002:8000 reservation-service-img'
             }
         }
     }
