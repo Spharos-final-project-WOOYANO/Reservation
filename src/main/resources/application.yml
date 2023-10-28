@@ -5,4 +5,18 @@ spring:
   application:
     name: reservation-service
   profiles:
+<<<<<<< HEAD
     default: secret
+=======
+    default: local
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+>>>>>>> d8030dec9019b6f4e7075d28cf5debb9a9274777
