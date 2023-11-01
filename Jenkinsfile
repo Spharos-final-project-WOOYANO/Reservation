@@ -42,6 +42,7 @@ pipeline {
         stage('Deploy'){
             steps{
                 sh 'docker run -d --name reservaton-service reservation-service-img'
+
             }
         }
     }
