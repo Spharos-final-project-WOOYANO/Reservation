@@ -25,16 +25,15 @@ pipeline {
                     docker stop reservaton-service || true
                     docker rm reservaton-service || true
                     docker rmi reservaton-service-img || true
-                    docker build -t reservaton-service-img:latest .
+                    docker buildx -t reservaton-service-img:latest .
                 '''
             }
         }
         stage('Deploy'){
             steps{
-                sh '''
-                docker login
+                sh '
                 docker run -d --name reservaton-service -p 8761:8000 reservation-service-img
-                '''
+                '
             }
         }
     }
