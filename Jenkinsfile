@@ -25,14 +25,13 @@ pipeline {
                     docker stop reservaton-service || true
                     docker rm reservaton-service || true
                     docker rmi reservaton-service-img || true
-                    docker images
-                    docker build -t wooyano/reservaton-service-img:latest .
+                    docker build -t reservaton-service-img:latest .
                 '''
             }
         }
         stage('Deploy'){
             steps{
-                sh 'docker run --name reservaton-service wooyano/reservation-service-img'
+                sh 'docker run -d --name reservaton-service -p 8001:8001 reservation-service-img'
             }
         }
     }
