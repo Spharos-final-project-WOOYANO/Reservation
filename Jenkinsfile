@@ -25,6 +25,7 @@ pipeline {
                     docker stop reservaton-service || true
                     docker rm reservaton-service || true
                     docker rmi reservaton-service-img || true
+                    docker images
                     docker build -t wooyano/reservaton-service-img:latest .
                 '''
             }
