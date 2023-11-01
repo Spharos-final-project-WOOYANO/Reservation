@@ -31,7 +31,10 @@ pipeline {
         }
         stage('Deploy'){
             steps{
-                sh 'docker run -d --name reservaton-service -p 8001:8001 reservation-service-img'
+                sh '''
+                docker exec -it jenkins-docker bash
+                docker run -d --name reservaton-service -p 8001:8001 reservation-service-img
+                '''
             }
         }
     }
