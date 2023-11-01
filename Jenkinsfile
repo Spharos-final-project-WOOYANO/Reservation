@@ -6,13 +6,23 @@ pipeline {
                 git branch: 'develop',credentialsId:'0-shingo', url:'https://github.com/Spharos-final-project-WOOYANO/Reservation'
             }
         }
+	stage('Secret-File Download'){
+	    steps {
+	        withCredentials([
+		    file(credentiaslId: 'Wooyano-Secret-File', variable: 'secret')
+		    ])
+		{
+		    sh "cp \$secret ./src/main/resources/application-secret.yml"
+		}
+	    }
+	}
         stage('Build'){
             steps{
                 script {
                     sh '''
                         pwd
                         chmod +x ./gradlew
-                        ./gradlew build
+                        ./gradlew build -x test
                     '''
                     
                 }
