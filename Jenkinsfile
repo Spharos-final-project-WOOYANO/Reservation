@@ -32,6 +32,7 @@ pipeline {
         stage('Deploy'){
             steps{
                 sh '''
+                docker login
                 docker pull reservation-service-img
                 docker run -d --name reservaton-service -p 8001:8001 reservation-service-img
                 '''
