@@ -41,7 +41,7 @@ pipeline {
         }
         stage('Deploy'){
             steps{
-                sh 'docker run -d --name reservaton-service -p 8761:8000 reservation-service-img'
+                sh 'docker run -d --name reservaton-service reservation-service-img'
             }
         }
     }
