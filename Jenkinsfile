@@ -32,7 +32,6 @@ pipeline {
         stage('Deploy'){
             steps{
                 sh '''
-                su root
                 docker run -d --name reservaton-service -p 8001:8001 reservation-service-img
                 '''
             }
