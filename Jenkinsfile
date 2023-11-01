@@ -31,7 +31,7 @@ pipeline {
         }
         stage('Deploy'){
             steps{
-                sh 'docker run --name reservaton-service reservation-service-img'
+                sh 'docker run --name reservaton-service wooyano/reservation-service-img'
             }
         }
     }
