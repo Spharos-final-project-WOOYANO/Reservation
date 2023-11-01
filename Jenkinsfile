@@ -25,7 +25,7 @@ pipeline {
                     docker stop reservaton-service || true
                     docker rm reservaton-service || true
                     docker rmi reservaton-service-img || true
-                    docker buildx -t reservaton-service-img:latest .
+                    docker build -t reservaton-service-img:latest .
                 '''
             }
         }
