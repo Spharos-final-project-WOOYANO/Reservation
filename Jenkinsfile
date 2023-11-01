@@ -32,16 +32,16 @@ pipeline {
         stage('DockerSize'){
             steps {
                 sh '''
-                    docker stop reservaton-service || true
-                    docker rm reservaton-service || true
-                    docker rmi reservaton-service-img || true
-                    docker build -t reservaton-service-img:latest .
+                    docker stop reservation-service || true
+                    docker rm reservation-service || true
+                    docker rmi reservation-service-img || true
+                    docker build -t reservation-service-img:latest .
                 '''
             }
         }
         stage('Deploy'){
             steps{
-                sh 'docker run -d --name reservaton-service reservation-service-img'
+                sh 'docker run -d --name reservation-service reservation-service-img'
 
             }
         }
