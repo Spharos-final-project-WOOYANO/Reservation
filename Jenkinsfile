@@ -22,7 +22,7 @@ pipeline {
                     sh '''
                         pwd
                         chmod +x ./gradlew
-                        ./gradlew build -x test
+                        ./gradlew build
                     '''
                     
                 }
@@ -41,7 +41,7 @@ pipeline {
         }
         stage('Deploy'){
             steps{
-                sh 'docker run -d --name reservation-service reservation-service-img'
+                sh 'docker run -d --network spharos-network --name reservation-service reservation-service-img'
 
             }
         }
