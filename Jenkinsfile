@@ -41,7 +41,7 @@ pipeline {
         }
         stage('Deploy'){
             steps{
-                sh 'docker run -d --network spharos-network --name reservation-service reservation-service-img'
+                sh 'docker run -d --network spharos-network -e EUREKA_URL="${EUREKA_URL}" --name reservation-service reservation-service-img'
 
             }
         }
