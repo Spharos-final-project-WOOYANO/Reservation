@@ -3,12 +3,11 @@ package shparos.reservation.reservations.presentation;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import shparos.reservation.global.common.response.BaseResponse;
 import shparos.reservation.reservations.application.ReservationService;
+import shparos.reservation.reservations.vo.request.ReservationInfoForReviewRequest;
+import shparos.reservation.reservations.vo.response.ReservationInfoForReviewResponse;
 import shparos.reservation.reservations.vo.response.UserRecentServiceResponse;
 
 import java.util.List;
@@ -36,5 +35,16 @@ public class UserReservationController {
         return new BaseResponse<>(response);
     }
 
+    @Operation(summary = "리뷰의 예약정보 조회",
+            description = "리뷰의 예약정보 조회",
+            tags = { "Review" })
+    @GetMapping("/review")
+    public BaseResponse<?> getReservationForReview(@RequestBody ReservationInfoForReviewRequest request) {
+
+        List<ReservationInfoForReviewResponse> response =
+                reservationService.getReservationForReview(request.getReservationNum());
+
+        return new BaseResponse<>(response);
+    }
 
 }

@@ -16,5 +16,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 //    List<Long> findUserRecentReservation(@Param("email") String email);
 
     List<Reservation> findByUserEmailOrderByIdDesc(String email);
+    List<Reservation> findByReservationNum(String reservationNum);
+
 
 }
