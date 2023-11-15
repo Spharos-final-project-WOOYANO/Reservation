@@ -25,7 +25,7 @@ public class Reservation extends BaseEntity {
     private String userEmail;
     @Column(nullable = false, name = "service_id")
     private Long serviceId;
-    @Column(nullable = false, name = "worker_id")
+    @Column(name = "worker_id")
     private Long workerId;
     @Column(nullable = false, name = "reservation_date")
     private LocalDate reservationDate;
