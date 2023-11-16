@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import spharos.reservation.dto.NewReservationDto;
+import spharos.reservation.reservations.dto.NewReservationDto;
 import spharos.reservation.global.common.response.BaseResponse;
 import spharos.reservation.reservations.application.ReservationService;
 import spharos.reservation.reservations.vo.request.ReservationInfoForReviewRequest;

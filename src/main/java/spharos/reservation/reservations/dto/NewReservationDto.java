@@ -1,4 +1,4 @@
-package spharos.reservation.dto;
+package spharos.reservation.reservations.dto;
 
 import lombok.*;
 

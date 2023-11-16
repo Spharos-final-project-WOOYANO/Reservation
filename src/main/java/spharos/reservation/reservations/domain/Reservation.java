@@ -43,9 +43,6 @@ public class Reservation extends BaseEntity {
     private String cancelDesc;
     @Column(length = 100, name = "request")
     private String request;
-    //↓ 애완동물 여부 체크 사라져서 주석 처리
-    //@Column(name = "pet_check")
-    //private Boolean petCheck;
     @Column(nullable = false, length = 10, name = "reservation_num")
     private String reservationNum;
     @Column(nullable = false, length = 30, name = "address")
