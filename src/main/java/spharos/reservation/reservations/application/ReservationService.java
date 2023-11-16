@@ -1,6 +1,6 @@
 package spharos.reservation.reservations.application;
 
-import spharos.reservation.dto.NewReservationDto;
+import spharos.reservation.reservations.dto.NewReservationDto;
 import spharos.reservation.reservations.vo.response.ReservationInfoForReviewResponse;
 
 import java.util.List;

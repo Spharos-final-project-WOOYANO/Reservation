@@ -2,9 +2,8 @@ package spharos.reservation.reservations.application;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.format.datetime.DateFormatter;
 import org.springframework.stereotype.Service;
-import spharos.reservation.dto.NewReservationDto;
+import spharos.reservation.reservations.dto.NewReservationDto;
 import spharos.reservation.global.common.response.ResponseCode;
 import spharos.reservation.global.exception.CustomException;
 import spharos.reservation.global.utill.AppConfig;
@@ -15,7 +14,6 @@ import spharos.reservation.reservations.infrastructure.ReservationGoodsRepositor
 import spharos.reservation.reservations.infrastructure.ReservationRepository;
 import spharos.reservation.reservations.vo.response.ReservationInfoForReviewResponse;
 
-import java.text.DateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
