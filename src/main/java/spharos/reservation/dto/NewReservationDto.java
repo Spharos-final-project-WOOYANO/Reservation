@@ -15,9 +15,9 @@ public class NewReservationDto {
     private Long serviceId;
     private Long workerId;
     private String userEmail;
-    private LocalDate reservationDate;
-    private LocalTime serviceStart;
-    private LocalTime serviceEnd;
+    private String reservationDate;
+    private String serviceStart;
+    private String serviceEnd;
     private Integer paymentAmount;
     private String request;
     private String address;

@@ -14,5 +14,4 @@ public interface ReservationService {
     // 서비스 신청
     void createNewReservation(NewReservationDto reservationDto);
 
-
 }

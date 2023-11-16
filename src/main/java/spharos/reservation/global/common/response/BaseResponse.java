@@ -1,4 +1,4 @@
-package shparos.reservation.global.common.response;
+package spharos.reservation.global.common.response;
 
 public record BaseResponse<T>(Boolean success, int code, T result) {
 

@@ -1,10 +1,10 @@
-package shparos.reservation.global.exception;
+package spharos.reservation.global.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import shparos.reservation.global.common.response.ErrorResponse;
+import spharos.reservation.global.common.response.ErrorResponse;
 
 @Slf4j
 @RestControllerAdvice

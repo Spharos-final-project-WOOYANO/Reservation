@@ -5,9 +5,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-
 @Builder
 @Getter
 @NoArgsConstructor
@@ -20,10 +17,10 @@ public class ReservationNewServiceRequest {
     private Long workerId;
     private String userEmail;
     //서비스 날짜
-    private LocalDate ReservationDate;
+    private String reservationDate;
     //서비스 시작 & 종료시간
-    private LocalTime serviceStart;
-    private LocalTime serviceEnd;
+    private String serviceStart;
+    private String serviceEnd;
     //결제 금액
     private Integer paymentAmount;
     //서비스 요청사항

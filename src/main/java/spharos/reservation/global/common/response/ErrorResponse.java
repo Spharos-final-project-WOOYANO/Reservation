@@ -1,4 +1,4 @@
-package shparos.reservation.global.common.response;
+package spharos.reservation.global.common.response;
 
 import lombok.Builder;
 import lombok.Getter;

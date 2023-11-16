@@ -1,4 +1,4 @@
-package shparos.reservation.global.common.domain;
+package spharos.reservation.global.common.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
