@@ -23,6 +23,7 @@ repositories {
 
 ext {
 	set('springCloudVersion', "2022.0.4")
+	axonVersion = '4.8.0'
 }
 
 dependencies {
@@ -36,6 +37,10 @@ dependencies {
 
 	// Swagger
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+
+	//axon
+	implementation group: 'org.axonframework', name: 'axon-spring-boot-starter', version: "$axonVersion"
+	implementation group: 'org.axonframework', name: 'axon-configuration', version: "$axonVersion"
 
 }
 
