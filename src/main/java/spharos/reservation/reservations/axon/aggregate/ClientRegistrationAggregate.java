@@ -37,6 +37,10 @@ public class ClientRegistrationAggregate {
     }
 
 
+
+
+
+
     @EventSourcingHandler
     public void on(ClientRegistrationEvent event) {
         try {

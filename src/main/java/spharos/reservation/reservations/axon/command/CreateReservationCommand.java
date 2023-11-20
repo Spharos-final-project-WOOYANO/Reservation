@@ -2,12 +2,16 @@ package spharos.reservation.reservations.axon.command;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.axonframework.modelling.command.TargetAggregateIdentifier;
+import spharos.reservation.reservations.domain.ReservationState;
 
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class CreateReservationCommand {
-    @TargetAggregateIdentifier
     private String reservationId;
     private Long reservationGoodsId; //예약 상품id
     private Long serviceId; //서비스id
@@ -19,27 +23,12 @@ public class CreateReservationCommand {
     private Integer paymentAmount; //결제 금액
 
     private String request; //요청사항
+    @TargetAggregateIdentifier
     private String reservationNum; //예약 번호
 
     private String address; //주소
-   // private Integer status; //예약 상태
+    private ReservationState status; //예약 상태
 
 
-    public CreateReservationCommand(String reservationId, Long reservationGoodsId, Long serviceId, Long workerId,
-                                    String userEmail, LocalDate reservationDate, LocalTime serviceStart,
-                                    LocalTime serviceEnd, Integer paymentAmount, String request, String reservationNum,
-                                    String address) {
-        this.reservationId = reservationId;
-        this.reservationGoodsId = reservationGoodsId;
-        this.serviceId = serviceId;
-        this.workerId = workerId;
-        this.userEmail = userEmail;
-        this.reservationDate = reservationDate;
-        this.serviceStart = serviceStart;
-        this.serviceEnd = serviceEnd;
-        this.paymentAmount = paymentAmount;
-        this.request = request;
-        this.reservationNum = reservationNum;
-        this.address = address;
-    }
+
 }

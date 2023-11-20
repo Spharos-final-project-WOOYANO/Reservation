@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum ReservationState {
 
-    PAVEMENT_WAITING(0,"결제대기"),
+    PAYMENT_WAITING(0,"결제대기"),
     WAIT(1,"예약대기"),
     CONFIRMED(2,"예약확정"),
     CANCEL(3,"고객예약취소"),
