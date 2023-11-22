@@ -12,7 +12,6 @@ import spharos.reservation.reservations.domain.ReservationState;
 @Getter
 public class ReservationCreateEvent {
 
-    private String reservationId;
     private Long reservationGoodsId; //예약 상품id
     private Long serviceId; //서비스id
     private Long workerId; //작업자id

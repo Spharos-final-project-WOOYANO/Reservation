@@ -1,9 +1,14 @@
 package spharos.reservation.reservations.axon.event.handler;
 
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
 import org.springframework.stereotype.Component;
+import spharos.reservation.global.common.response.ResponseCode;
+import spharos.reservation.global.exception.CustomException;
+import spharos.reservation.reservations.axon.event.CancelReservationStatusEvent;
 import spharos.reservation.reservations.axon.event.ChangeReservationStatusEvent;
 import spharos.reservation.reservations.axon.event.ReservationCreateEvent;
 import spharos.reservation.reservations.domain.Reservation;
@@ -15,37 +20,39 @@ import spharos.reservation.reservations.infrastructure.ReservationRepository;
 @Component
 @Slf4j
 @RequiredArgsConstructor
+@ProcessingGroup("reservation")
 public class ReservationEventHandler {
     private final ReservationRepository reservationRepository;
     private final ReservationGoodsRepository reservationGoodsRepository;
 
     @EventHandler
-    public void saveOrder(ReservationCreateEvent event) {
-        log.info("service id={}", event.getServiceId());
+    public void on(ReservationCreateEvent event) {
+        log.info("reservation_goods id={}", event.getServiceId());
         //예약 중복
-      //  Optional<Reservation> reservation = reservationRepository.findByReservationGoodsId(event.getServiceId());
+        Optional<Reservation> reservation = reservationRepository.findByReservationGoodsId(event.getReservationGoodsId());
 
-       /* if (reservation.isPresent()) {
+        if (reservation.isPresent()) {
             throw new CustomException(ResponseCode.DUPLICATED_RESERVATION);
-        }*/
-            log.info("[saveOrder]");
-            ReservationGoods reservationGoods = reservationGoodsRepository.findById(event.getReservationGoodsId())
-                    .get();
-            Reservation build = Reservation.builder()
-                    .reservationGoods(reservationGoods)
-                    .userEmail(event.getUserEmail())
-                    .serviceId(event.getServiceId())
-                    .workerId(event.getWorkerId())
-                    .reservationDate(event.getReservationDate())
-                    .serviceStart(event.getServiceStart())
-                    .serviceEnd(event.getServiceEnd())
-                    .reservationState(ReservationState.PAYMENT_WAITING)
-                    .paymentAmount(event.getPaymentAmount())
-                    .request(event.getRequest())
-                    .reservationNum(event.getReservationNum())
-                    .address(event.getAddress())
-                    .build();
-            reservationRepository.save(build);
+        }
+        log.info("[saveOrder]");
+        log.info("getReservationGoodsId={}", event.getReservationGoodsId());
+        ReservationGoods reservationGoods = reservationGoodsRepository.findById(event.getReservationGoodsId()).get();
+        log.info("reservationGoodsgetId={}", reservationGoods.getId());
+        Reservation build = Reservation.builder()
+                .reservationGoods(reservationGoods)
+                .userEmail(event.getUserEmail())
+                .serviceId(event.getServiceId())
+                .workerId(event.getWorkerId())
+                .reservationDate(event.getReservationDate())
+                .serviceStart(event.getServiceStart())
+                .serviceEnd(event.getServiceEnd())
+                .reservationState(ReservationState.PAYMENT_WAITING)
+                .paymentAmount(event.getPaymentAmount())
+                .request(event.getRequest())
+                .reservationNum(event.getReservationNum())
+                .address(event.getAddress())
+                .build();
+        reservationRepository.save(build);
 
     }
 
@@ -57,4 +64,11 @@ public class ReservationEventHandler {
         reservationRepository.save(reservation);
 
     }
+
+    @EventHandler
+    public void cancel(CancelReservationStatusEvent event){
+        log.info("[cancel]");
+
+    }
 }
+

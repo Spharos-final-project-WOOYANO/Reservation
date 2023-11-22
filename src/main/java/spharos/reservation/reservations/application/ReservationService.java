@@ -10,4 +10,5 @@ public interface ReservationService {
     void createReservation(CreateReservationDto reservationNewServiceRequest);
 
     void changeReservationStatus(ChangeReservationRequest request);
+    void test(Long id);
 }

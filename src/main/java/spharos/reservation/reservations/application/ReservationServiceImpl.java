@@ -4,17 +4,14 @@ import static spharos.reservation.reservations.domain.ReservationState.PAYMENT_W
 import static spharos.reservation.reservations.domain.ReservationState.WAIT;
 
 import java.util.Random;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.queryhandling.QueryGateway;
 import org.springframework.stereotype.Service;
-import spharos.reservation.global.common.response.ResponseCode;
-import spharos.reservation.global.exception.CustomException;
 import spharos.reservation.reservations.axon.command.ChangeReservationStatusCommand;
 import spharos.reservation.reservations.axon.command.CreateReservationCommand;
-import spharos.reservation.reservations.axon.query.ReservationExistQuery;
+import spharos.reservation.reservations.domain.ReservationGoods;
 import spharos.reservation.reservations.dto.ChangeReservationRequest;
 import spharos.reservation.reservations.dto.CreateReservationDto;
 import spharos.reservation.reservations.infrastructure.ReservationGoodsRepository;
@@ -35,14 +32,14 @@ public class ReservationServiceImpl implements ReservationService {
     public void createReservation(CreateReservationDto request) {
         log.info("request reservation good={}", request.getReservationGoodsId().getClass());
 
-        Boolean serviceExists  = queryGateway.query(new ReservationExistQuery(request.getReservationGoodsId()), Boolean.class).join();
-        log.info("serviceExists : {}", serviceExists);
-        if(!serviceExists){
+//        Boolean serviceExists  = queryGateway.query(new ReservationExistQuery(request.getReservationGoodsId()), Boolean.class).join();
+//        log.info("serviceExists : {}", serviceExists);
+//        if(!serviceExists){
 
         String reservationNum = generateRandomReservationNum();
 
 
-        CreateReservationCommand createOrderCommand = new CreateReservationCommand(UUID.randomUUID().toString(),
+        CreateReservationCommand createOrderCommand = new CreateReservationCommand(
                 request.getReservationGoodsId(), request.getServiceId(),
                 request.getWorkerId(), request.getUserEmail(),
                 request.getReservationDate(), request.getServiceStart(),
@@ -57,16 +54,18 @@ public class ReservationServiceImpl implements ReservationService {
                 log.info("Order created successfully");
             }
         });}
-        else{
+        /*else{
             throw new CustomException(ResponseCode.DUPLICATED_RESERVATION);
-        }
+        }*/
 
-    }
+
 
     @Override
     public void changeReservationStatus(ChangeReservationRequest request) {
         ChangeReservationStatusCommand changeReservationStatusCommand = new ChangeReservationStatusCommand
-                (request.getReservation_num(), WAIT);
+                (request.getReservation_num(), WAIT,request.getClientEmail(),request.getPaymentType(),
+                        request.getTotalAmount(),request.getApprovedAt(),request.getPaymentStatus());
+
         commandGateway.send(changeReservationStatusCommand).whenComplete((result, throwable) -> {
             if (throwable != null) {
                 log.error("Failed to change reservation status", throwable);
@@ -76,6 +75,14 @@ public class ReservationServiceImpl implements ReservationService {
             }
         });
 
+    }
+
+    @Override
+    public void test(Long id) {
+        log.info("id={}",id);
+        //List<ReservationGoods> all = reservationGoodsRepository.findAll();
+        ReservationGoods reservationGoods = reservationGoodsRepository.findByTest(4).get();
+        log.info("reservationGoods={}",reservationGoods);
     }
 
     //랜덤 예약번호 생성

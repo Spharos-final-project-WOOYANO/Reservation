@@ -41,6 +41,7 @@ dependencies {
 	//axon
 	implementation group: 'org.axonframework', name: 'axon-spring-boot-starter', version: "$axonVersion"
 	implementation group: 'org.axonframework', name: 'axon-configuration', version: "$axonVersion"
+	implementation group: 'org.axonframework.extensions.springcloud', name: 'axon-springcloud', version: '4.8.0'
 
 }
 
