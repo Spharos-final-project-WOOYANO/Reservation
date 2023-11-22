@@ -47,7 +47,7 @@ public class UserReservationController {
     @Operation(summary = "리뷰의 예약정보 조회",
             description = "리뷰의 예약정보 조회",
             tags = { "Review" })
-    @GetMapping("/review")
+    @PostMapping("/review")
     public BaseResponse<?> getReservationForReview(@RequestBody ReservationInfoForReviewRequest request) {
 
         List<ReservationInfoForReviewResponse> response =
