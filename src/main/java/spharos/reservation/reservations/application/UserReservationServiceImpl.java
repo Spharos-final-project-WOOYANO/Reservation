@@ -14,6 +14,7 @@ import spharos.reservation.reservations.dto.UserReservationDto;
 import spharos.reservation.reservations.infrastructure.ReservationGoodsRepository;
 import spharos.reservation.reservations.infrastructure.ReservationRepository;
 import spharos.reservation.reservations.vo.response.ReservationInfoForReviewResponse;
+import spharos.reservation.reservations.vo.response.UserReservationDetailResponse;
 import spharos.reservation.reservations.vo.response.UserReservationResponse;
 
 import java.util.ArrayList;
@@ -148,6 +149,51 @@ public class UserReservationServiceImpl implements UserReservationService{
                 .page(reservationNumList.getPageable().getPageNumber())
                 .size(reservationNumList.getPageable().getPageSize())
                 .totalRows(reservationNumList.getTotalElements())
+                .build();
+    }
+
+    // 서비스 상세 내역조회
+    @Override
+    public UserReservationDetailResponse getUserReservationDetail(String email, String reservationNum) {
+
+        // 예약번호에 일치하는 예약정보 가져오기
+       List<Reservation> reservationList = reservationRepository.findByReservationNum(reservationNum);
+
+        // 예약번호로 조회된 예약정보가 없는 경우 에러
+        if(reservationList.isEmpty()) {
+            throw new CustomException(ResponseCode.CANNOT_FIND_RESERVATION);
+        }
+
+        // 상품id와 상품 가격 이외에는 모두 같은 값이므로 리스트에서 제일 첫번째 요소를 가져오기
+        Reservation reservation = reservationList.get(0);
+
+        // 이메일이 다른 경우는 예외처리
+        if(!reservation.getUserEmail().equals(email)) {
+            throw new CustomException(ResponseCode.WRONG_APPROACH);
+        }
+
+        // 상품 표시명 리스트와 가격 총합 만들기
+        List<String> serviceItemNameList = new ArrayList<>();
+        int totalPrice = 0;
+        for(Reservation tmpReservation : reservationList) {
+            serviceItemNameList.add(tmpReservation.getReservationGoods().getServiceItemName());
+            totalPrice = totalPrice + tmpReservation.getPaymentAmount();
+        }
+
+        return UserReservationDetailResponse.builder()
+                .reservationDate(reservation.getReservationDate())
+                .serviceStart(reservation.getServiceStart())
+                .serviceEnd(reservation.getServiceEnd())
+                .serviceItemNameList(serviceItemNameList)
+                .reservationNum(reservation.getReservationNum())
+                .createdAt(reservation.getCreatedAt())
+                .paymentAmount(totalPrice)
+                .reservationState(reservation.getReservationState().getValue())
+                .address(reservation.getAddress())
+                .request(reservation.getRequest())
+                .cancelDesc(reservation.getCancelDesc())
+                .serviceId(reservation.getServiceId())
+                .workerId(reservation.getWorkerId())
                 .build();
     }
 
