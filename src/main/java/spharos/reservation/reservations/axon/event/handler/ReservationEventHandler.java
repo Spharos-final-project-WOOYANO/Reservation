@@ -20,7 +20,6 @@ import spharos.reservation.reservations.infrastructure.ReservationRepository;
 @Component
 @Slf4j
 @AllArgsConstructor
-@ProcessingGroup("reservations")
 public class ReservationEventHandler {
     private final ReservationRepository reservationRepository;
     private final ReservationGoodsRepository reservationGoodsRepository;
@@ -59,7 +58,7 @@ public class ReservationEventHandler {
     @EventHandler
     public void changeStatusReservation(ChangeReservationStatusEvent event) {
         log.info("[changeStatusReservation]");
-        Reservation reservation = reservationRepository.findByReservationNum(event.getReservation_num());
+        Reservation reservation = reservationRepository.findByReservationNumOne(event.getReservation_num());
         reservation.changeStatus(event.getStatus());
         reservationRepository.save(reservation);
 

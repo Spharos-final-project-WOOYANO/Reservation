@@ -18,6 +18,9 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     @Query(value = "SELECT r FROM Reservation r WHERE r.reservationGoods.id = :reservationGoods")
     Optional<Reservation> findByReservationGoodsId(@Param("reservationGoods") Long reservationGoods);
 
+    @Query("SELECT r FROM Reservation r WHERE r.reservationNum = :reservationNum")
+    Reservation findByReservationNumOne(String reservationNum);
+
 
     List<Reservation> findByUserEmailOrderByIdDesc(String email);
     List<Reservation> findByReservationNum(String reservationNum);
