@@ -1,5 +1,6 @@
 package spharos.reservation.reservations.domain;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -29,7 +30,7 @@ public class Reservation extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(nullable = false)
     private ReservationGoods reservationGoods;
     @Column(nullable = false, length = 50, name = "user_email")
@@ -58,6 +59,9 @@ public class Reservation extends BaseEntity {
     @Column(nullable = false, length = 30, name = "address")
     private String address;
 
+    public void changeStatus(ReservationState status) {
+        this.reservationState = status;
+    }
 
 
 
