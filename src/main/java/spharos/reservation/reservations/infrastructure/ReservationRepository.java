@@ -2,7 +2,6 @@ package spharos.reservation.reservations.infrastructure;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import spharos.reservation.reservations.domain.Reservation;
-
 import java.util.List;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long>  {
@@ -16,7 +15,11 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 //    List<Long> findUserRecentReservation(@Param("email") String email);
 
     List<Reservation> findByUserEmailOrderByIdDesc(String email);
+
     List<Reservation> findByReservationNum(String reservationNum);
+
+    List<Long> findAllWorkerIdByReservationNum(String reservationNum);
+
 
 
 }
