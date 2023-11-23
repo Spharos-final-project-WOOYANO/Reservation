@@ -1,9 +1,11 @@
-package spharos.reservation.reservations.axon.command;
+package spharos.payment.axon.command;
 
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import spharos.reservation.reservations.axon.command.PaymentStatus;
+import spharos.reservation.reservations.axon.command.PaymentType;
 
 @Getter
 @NoArgsConstructor

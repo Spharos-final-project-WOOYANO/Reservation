@@ -11,7 +11,6 @@ import org.axonframework.queryhandling.QueryGateway;
 import org.springframework.stereotype.Service;
 import spharos.reservation.reservations.axon.command.ChangeReservationStatusCommand;
 import spharos.reservation.reservations.axon.command.CreateReservationCommand;
-import spharos.reservation.reservations.domain.ReservationGoods;
 import spharos.reservation.reservations.dto.ChangeReservationRequest;
 import spharos.reservation.reservations.dto.CreateReservationDto;
 import spharos.reservation.reservations.infrastructure.ReservationGoodsRepository;
@@ -77,13 +76,6 @@ public class ReservationServiceImpl implements ReservationService {
 
     }
 
-    @Override
-    public void test(Long id) {
-        log.info("id={}",id);
-        //List<ReservationGoods> all = reservationGoodsRepository.findAll();
-        ReservationGoods reservationGoods = reservationGoodsRepository.findByTest(4).get();
-        log.info("reservationGoods={}",reservationGoods);
-    }
 
     //랜덤 예약번호 생성
     private String generateRandomReservationNum() {

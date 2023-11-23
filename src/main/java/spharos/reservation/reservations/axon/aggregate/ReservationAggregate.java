@@ -58,7 +58,7 @@ public class ReservationAggregate {
     }
 
     @EventSourcingHandler
-    public void on(ChangeReservationStatusEvent event) {
+    public void change(ChangeReservationStatusEvent event) {
         this.reservationState = event.getStatus();
     }
 
