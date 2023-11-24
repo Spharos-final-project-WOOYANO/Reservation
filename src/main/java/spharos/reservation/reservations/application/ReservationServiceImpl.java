@@ -31,10 +31,6 @@ public class ReservationServiceImpl implements ReservationService {
     public void createReservation(CreateReservationDto request) {
         log.info("request reservation good={}", request.getReservationGoodsId().getClass());
 
-//        Boolean serviceExists  = queryGateway.query(new ReservationExistQuery(request.getReservationGoodsId()), Boolean.class).join();
-//        log.info("serviceExists : {}", serviceExists);
-//        if(!serviceExists){
-
         String reservationNum = generateRandomReservationNum();
 
 
@@ -65,14 +61,9 @@ public class ReservationServiceImpl implements ReservationService {
                 (request.getReservation_num(), WAIT,request.getClientEmail(),request.getPaymentType(),
                         request.getTotalAmount(),request.getApprovedAt(),request.getPaymentStatus());
 
-        commandGateway.send(changeReservationStatusCommand).whenComplete((result, throwable) -> {
-            if (throwable != null) {
-                log.error("Failed to change reservation status", throwable);
-            }
-            else{
-                log.info("Reservation status changed successfully");
-            }
-        });
+        commandGateway.send(changeReservationStatusCommand);
+
+
 
     }
 

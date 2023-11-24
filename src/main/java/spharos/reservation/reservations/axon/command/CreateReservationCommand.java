@@ -23,7 +23,7 @@ public class CreateReservationCommand {
     private Integer paymentAmount; //결제 금액
 
     private String request; //요청사항
-    @TargetAggregateIdentifier
+
     private String reservationNum; //예약 번호
 
     private String address; //주소
