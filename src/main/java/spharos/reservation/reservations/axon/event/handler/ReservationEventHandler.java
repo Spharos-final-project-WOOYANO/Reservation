@@ -17,15 +17,16 @@ import spharos.reservation.reservations.domain.ReservationState;
 import spharos.reservation.reservations.infrastructure.ReservationGoodsRepository;
 import spharos.reservation.reservations.infrastructure.ReservationRepository;
 
-@Component
 @Slf4j
+@Component
 @AllArgsConstructor
+@ProcessingGroup("reservations")
 public class ReservationEventHandler {
     private final ReservationRepository reservationRepository;
     private final ReservationGoodsRepository reservationGoodsRepository;
 
     @EventHandler
-    public void on(ReservationCreateEvent event) {
+    public void create( ReservationCreateEvent event) {
         log.info("reservation_goods id={}", event.getServiceId());
         //예약 중복
         Optional<Reservation> reservation = reservationRepository.findByReservationGoodsId(event.getReservationGoodsId());
@@ -67,6 +68,8 @@ public class ReservationEventHandler {
     @EventHandler
     public void cancel(CancelReservationStatusEvent event){
         log.info("[cancel]");
+        Reservation byReservationNumOne = reservationRepository.findByReservationNumOne(event.getReservation_num());
+        reservationRepository.delete(byReservationNumOne);
 
     }
 }

@@ -13,6 +13,5 @@ public class CancelReservationCommand {
     @TargetAggregateIdentifier
     private String reservationNum; //예약 번호
 
-    private ReservationState status; //예약 상태
 
     }

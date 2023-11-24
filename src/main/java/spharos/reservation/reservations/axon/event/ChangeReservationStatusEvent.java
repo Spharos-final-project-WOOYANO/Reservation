@@ -1,5 +1,6 @@
 package spharos.reservation.reservations.axon.event;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,9 +17,9 @@ public class ChangeReservationStatusEvent {
     private ReservationState status;
 
     private String clientEmail; //사업자 이메일
-    private PaymentType paymentType; //"0"
+    private String paymentType; //"0"
     private int totalAmount; //결제 금액
     private LocalDateTime approvedAt; //결제 완료,취소가 일어난 날짜와 시간 정보
-    private PaymentStatus paymentStatus; //"0"
+    private String paymentStatus; //"0"
 
 }
