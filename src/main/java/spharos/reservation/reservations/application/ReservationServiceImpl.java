@@ -28,32 +28,33 @@ public class ReservationServiceImpl implements ReservationService {
     private int randomStrLen= 10;
 
     @Override
-    public void createReservation(CreateReservationDto request) {
+    public String createReservation(CreateReservationDto request) {
         log.info("request reservation good={}", request.getReservationGoodsId().getClass());
 
         String reservationNum = generateRandomReservationNum();
-
 
         CreateReservationCommand createOrderCommand = new CreateReservationCommand(
                 request.getReservationGoodsId(), request.getServiceId(),
                 request.getWorkerId(), request.getUserEmail(),
                 request.getReservationDate(), request.getServiceStart(),
                 request.getServiceEnd(), request.getPaymentAmount(),
-                request.getRequest(),reservationNum,
-                request.getAddress(),PAYMENT_WAITING);
-        commandGateway.send(createOrderCommand).whenComplete((result, throwable) -> {
+                request.getRequest(), reservationNum,
+                request.getAddress(), PAYMENT_WAITING);
+        commandGateway.send(createOrderCommand);
+        return reservationNum;
+/*        .whenComplete((result, throwable) -> {
             if (throwable != null) {
                 log.error("Failed to create order", throwable);
             }
             else{
                 log.info("Order created successfully");
             }
-        });}
+        });}*/
         /*else{
             throw new CustomException(ResponseCode.DUPLICATED_RESERVATION);
         }*/
 
-
+    }
 
     @Override
     public void changeReservationStatus(ChangeReservationRequest request) {

@@ -2,6 +2,7 @@ package spharos.reservation.reservations.axon.event.handler;
 
 import java.util.Optional;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
@@ -19,8 +20,8 @@ import spharos.reservation.reservations.infrastructure.ReservationRepository;
 
 @Slf4j
 @Component
-@AllArgsConstructor
-@ProcessingGroup("reservations")
+@RequiredArgsConstructor
+@ProcessingGroup("reserva")
 public class ReservationEventHandler {
     private final ReservationRepository reservationRepository;
     private final ReservationGoodsRepository reservationGoodsRepository;

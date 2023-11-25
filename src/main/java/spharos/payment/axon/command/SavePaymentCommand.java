@@ -4,15 +4,13 @@ import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import spharos.reservation.reservations.axon.command.PaymentStatus;
-import spharos.reservation.reservations.axon.command.PaymentType;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class SavePaymentCommand {
 
-    private String id;
+    private String reservation_num;
 
     private String clientEmail; //사업자 이메일
     private String paymentType; //결제수단  카드, 간편결제

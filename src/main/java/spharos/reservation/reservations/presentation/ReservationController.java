@@ -25,9 +25,9 @@ public class ReservationController {
     @PostMapping("/create")
     public BaseResponse<?> reservationNewService(@RequestBody CreateReservationDto request) {
 
-        reservationService.createReservation(request);
+        String reservation = reservationService.createReservation(request);
 
-        return new BaseResponse<>();
+        return new BaseResponse<>(reservation);
     }
 
 
