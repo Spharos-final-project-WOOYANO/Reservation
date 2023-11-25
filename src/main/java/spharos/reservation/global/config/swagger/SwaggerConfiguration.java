@@ -1,4 +1,4 @@
-package shparos.reservation.global.config.swagger;
+package spharos.reservation.global.config.swagger;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import lombok.RequiredArgsConstructor;

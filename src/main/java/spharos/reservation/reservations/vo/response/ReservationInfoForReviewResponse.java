@@ -1,4 +1,4 @@
-package shparos.reservation.reservations.vo.response;
+package spharos.reservation.reservations.vo.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

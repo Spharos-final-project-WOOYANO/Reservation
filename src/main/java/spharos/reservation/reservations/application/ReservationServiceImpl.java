@@ -1,17 +1,21 @@
-package shparos.reservation.reservations.application;
+package spharos.reservation.reservations.application;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import shparos.reservation.global.common.response.ResponseCode;
-import shparos.reservation.global.exception.CustomException;
-import shparos.reservation.reservations.domain.Reservation;
-import shparos.reservation.reservations.domain.ReservationState;
-import shparos.reservation.reservations.infrastructure.ReservationRepository;
-import shparos.reservation.reservations.vo.response.ReservationInfoForReviewResponse;
-
+import spharos.reservation.dto.NewReservationDto;
+import spharos.reservation.global.common.response.ResponseCode;
+import spharos.reservation.global.exception.CustomException;
+import spharos.reservation.global.utill.AppConfig;
+import spharos.reservation.reservations.domain.Reservation;
+import spharos.reservation.reservations.domain.ReservationGoods;
+import spharos.reservation.reservations.domain.ReservationState;
+import spharos.reservation.reservations.infrastructure.ReservationGoodsRepository;
+import spharos.reservation.reservations.infrastructure.ReservationRepository;
+import spharos.reservation.reservations.vo.response.ReservationInfoForReviewResponse;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -19,7 +23,9 @@ import java.util.List;
 public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository reservationManageRepository;
-
+    private final ReservationGoodsRepository reservationGoodsRepository;
+    // 예약번호 생성
+    private final AppConfig appConfig;
     // 최근 받은 서비스 조회
     @Override
     public List<Long> getUserRecentService(String email) {
@@ -82,5 +88,41 @@ public class ReservationServiceImpl implements ReservationService {
             responseList.add(response);
         }
         return responseList;
+    }
+
+    //예약 신청
+    @Override
+    public void createNewReservation(NewReservationDto reservationDto){
+
+        //예약 상품이 존재하지 않을경우
+        Optional<ReservationGoods> reservationGoods = reservationGoodsRepository.findById(reservationDto.getReservationGoodsId());
+
+        if(reservationGoods.isEmpty()){
+            log.info("reservationGoods is empty");
+            throw new CustomException(ResponseCode.CANNOT_FIND_RESERVATION_GOODS);
+        }
+
+        ReservationGoods reservationServiceGoods = reservationGoods.get();
+
+        ReservationState reservationState = ReservationState.WAIT;
+
+        String reservationNumber = "WYN-" + AppConfig.getRandomValue();
+        log.info("reservationNumber : {}", reservationNumber);
+        Reservation reservation = Reservation.createReservation(
+                        reservationServiceGoods,
+                        reservationDto.getUserEmail(),
+                        reservationDto.getServiceId(),
+                        reservationDto.getWorkerId(),
+                        reservationDto.getReservationDate(),
+                        reservationDto.getServiceStart(),
+                        reservationDto.getServiceEnd(),
+                        reservationState,
+                        reservationDto.getPaymentAmount(),
+                        reservationDto.getRequest(),
+                        reservationNumber,
+                        reservationDto.getAddress());
+
+        reservationManageRepository.save(reservation);
+
     }
 }

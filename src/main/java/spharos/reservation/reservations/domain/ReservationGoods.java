@@ -1,4 +1,4 @@
-package shparos.reservation.reservations.domain;
+package spharos.reservation.reservations.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;

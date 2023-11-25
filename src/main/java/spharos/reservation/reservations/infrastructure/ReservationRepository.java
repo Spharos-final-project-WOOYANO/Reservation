@@ -1,7 +1,7 @@
-package shparos.reservation.reservations.infrastructure;
+package spharos.reservation.reservations.infrastructure;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import shparos.reservation.reservations.domain.Reservation;
+import spharos.reservation.reservations.domain.Reservation;
 
 import java.util.List;
 

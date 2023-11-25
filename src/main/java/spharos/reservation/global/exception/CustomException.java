@@ -1,8 +1,8 @@
-package shparos.reservation.global.exception;
+package spharos.reservation.global.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import shparos.reservation.global.common.response.ResponseCode;
+import spharos.reservation.global.common.response.ResponseCode;
 
 @Getter
 @AllArgsConstructor
