@@ -4,5 +4,5 @@ spring:
   application:
     name: reservation-service
   profiles:
-    default: local
+    default: secret
 
