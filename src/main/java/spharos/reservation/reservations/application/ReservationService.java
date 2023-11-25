@@ -7,7 +7,7 @@ public interface ReservationService {
 
 
     // 서비스 신청
-    void createReservation(CreateReservationDto reservationNewServiceRequest);
+    String createReservation(CreateReservationDto reservationNewServiceRequest);
 
     void changeReservationStatus(ChangeReservationRequest request);
 
