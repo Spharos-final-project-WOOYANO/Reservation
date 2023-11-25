@@ -1,7 +1,6 @@
 package spharos.reservation.reservations.axon.event.handler;
 
 import java.util.Optional;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.config.ProcessingGroup;
