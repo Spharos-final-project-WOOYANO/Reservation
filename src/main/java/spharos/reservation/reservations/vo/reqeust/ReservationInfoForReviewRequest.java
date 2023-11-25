@@ -1,4 +1,4 @@
-package spharos.reservation.reservations.vo.request;
+package spharos.reservation.reservations.vo.reqeust;
 
 import lombok.Getter;
 

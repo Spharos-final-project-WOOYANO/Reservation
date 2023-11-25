@@ -7,19 +7,26 @@ spring:
     url: jdbc:mysql://localhost:3306/test
     username: root
     password: 1234
-    driver-class-name: com.mysql.cj.jdbc.Driver
 
-  data:
-    redis:
-      host: localhost
-      port: 6379
+#  data:
+#    redis:
+#      host: localhost
+#      port: 6379
 
   jpa:
     database: mysql
+    show-sql: true
     hibernate:
       ddl-auto: update
       format_sql: true
-      show-sql: true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+#logging:
+#  level:
+#    com:
+#      cqrs:
+#        command : debug
+#    org:
+#      axonframework: debug
 
 springdoc:
   swagger-ui:
@@ -42,6 +49,13 @@ JWT:
   refresh-expiration-time: 86400000
   header: Authorization
   prefix: Bearer
+
+axon:
+  axonserver:
+    hostname: axon
+    port: 8024
+  serializer:
+    general: xstream
 
 eureka:
   client:

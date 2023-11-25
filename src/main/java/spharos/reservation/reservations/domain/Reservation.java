@@ -1,18 +1,28 @@
 package spharos.reservation.reservations.domain;
 
-import jakarta.persistence.*;
-import lombok.AccessLevel;
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import spharos.reservation.global.common.domain.BaseEntity;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "reservation")
 public class Reservation extends BaseEntity {
 
@@ -47,46 +57,8 @@ public class Reservation extends BaseEntity {
     private String reservationNum;
     @Column(nullable = false, length = 30, name = "address")
     private String address;
-    @Builder
-    public Reservation(ReservationGoods reservationGoods,
-                       String userEmail,
-                       Long serviceId,
-                       Long workerId,
-                       LocalDate reservationDate,
-                       LocalTime serviceStart,
-                       LocalTime serviceEnd,
-                       ReservationState reservationState,
-                       Integer paymentAmount,
-                       String request,
-                       String reservationNum,
-                       String address) {
-        this.reservationGoods = reservationGoods;
-        this.userEmail = userEmail;
-        this.serviceId = serviceId;
-        this.workerId = workerId;
-        this.reservationDate = reservationDate;
-        this.serviceStart = serviceStart;
-        this.serviceEnd = serviceEnd;
-        this.reservationState = reservationState;
-        this.paymentAmount = paymentAmount;
-        this.request = request;
-        this.reservationNum = reservationNum;
-        this.address = address;
-    }
 
 
-    public static Reservation createReservation(ReservationGoods reservationGoods,
-                                                String userEmail,
-                                                Long serviceId,
-                                                Long workerId,
-                                                LocalDate reservationDate,
-                                                LocalTime serviceStart,
-                                                LocalTime serviceEnd,
-                                                ReservationState reservationState,
-                                                Integer paymentAmount,
-                                                String request,
-                                                String reservationNum,
-                                                String address) {
-        return new Reservation(reservationGoods, userEmail, serviceId, workerId, reservationDate, serviceStart, serviceEnd, reservationState, paymentAmount, request, reservationNum, address);
-    }
+
+
 }
