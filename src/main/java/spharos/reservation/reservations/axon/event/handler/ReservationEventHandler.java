@@ -1,7 +1,6 @@
 package spharos.reservation.reservations.axon.event.handler;
-
 import java.util.Optional;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
@@ -19,8 +18,8 @@ import spharos.reservation.reservations.infrastructure.ReservationRepository;
 
 @Slf4j
 @Component
-@RequiredArgsConstructor
-@ProcessingGroup("reserva")
+@AllArgsConstructor
+@ProcessingGroup("reservations")
 public class ReservationEventHandler {
     private final ReservationRepository reservationRepository;
     private final ReservationGoodsRepository reservationGoodsRepository;
@@ -30,7 +29,6 @@ public class ReservationEventHandler {
         log.info("reservation_goods id={}", event.getServiceId());
         //예약 중복
         Optional<Reservation> reservation = reservationRepository.findByReservationGoodsId(event.getReservationGoodsId());
-
         if (reservation.isPresent()) {
             throw new CustomException(ResponseCode.DUPLICATED_RESERVATION);
         }
@@ -53,18 +51,14 @@ public class ReservationEventHandler {
                 .address(event.getAddress())
                 .build();
         reservationRepository.save(build);
-
     }
-
     @EventHandler
     public void changeStatusReservation(ChangeReservationStatusEvent event) {
         log.info("[changeStatusReservation]");
         Reservation reservation = reservationRepository.findByReservationNumOne(event.getReservation_num());
         reservation.changeStatus(event.getStatus());
         reservationRepository.save(reservation);
-
     }
-
     @EventHandler
     public void cancel(CancelReservationStatusEvent event){
         log.info("[cancel]");
@@ -73,4 +67,3 @@ public class ReservationEventHandler {
 
     }
 }
-
