@@ -7,14 +7,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import spharos.reservation.reservations.domain.Reservation;
 import spharos.reservation.reservations.domain.ReservationState;
+
 import java.util.List;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long>  {
 
     List<Reservation> findByUserEmailOrderByIdDesc(String email);
-
     List<Reservation> findByReservationNum(String reservationNum);
-
 
     @Query(value = "SELECT "
             + "DISTINCT reservationNum "
@@ -30,8 +29,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
             + "AND reservationState = :state "
             + "ORDER BY reservationNum DESC ")
     Page<String> findUserReservationNumberAndState(@Param("email") String email,
-                                                    @Param("state") ReservationState state,
-                                                    Pageable pageable);
+                                                   @Param("state") ReservationState state,
+                                                   Pageable pageable);
 
 
 }

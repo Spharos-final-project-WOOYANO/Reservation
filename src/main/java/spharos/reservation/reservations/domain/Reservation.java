@@ -1,5 +1,6 @@
 package spharos.reservation.reservations.domain;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -58,6 +59,9 @@ public class Reservation extends BaseEntity {
     @Column(nullable = false, length = 30, name = "address")
     private String address;
 
+    public void changeStatus(ReservationState status) {
+        this.reservationState = status;
+    }
 
 
 

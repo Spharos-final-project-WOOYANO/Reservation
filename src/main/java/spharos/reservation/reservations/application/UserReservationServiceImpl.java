@@ -199,17 +199,17 @@ public class UserReservationServiceImpl implements UserReservationService{
 
     // 결제상태 문자열과 일치하는 결제상태Enum값 구하기
     private ReservationState getReservationState(String reservationState) {
-        Integer code = null;
+        String code = null;
         if(ReservationState.WAIT.getValue().equals(reservationState)) {
-            code = 1;
+            code = "1";
         } else if (ReservationState.CONFIRMED.getValue().equals(reservationState)){
-            code = 2;
+            code = "2";
         } else if (ReservationState.CANCEL.getValue().equals(reservationState)){
-            code = 3;
+            code = "3";
         } else if (ReservationState.REFUSE.getValue().equals(reservationState)){
-            code = 4;
+            code = "4";
         } else if (ReservationState.COMPLETE.getValue().equals(reservationState)){
-            code = 5;
+            code = "5";
         } else {
             // 일치하는 예약상태가 없는 경우 예외처리
             throw new CustomException(ResponseCode.INCORRECT_RESERVATION_STATE);
