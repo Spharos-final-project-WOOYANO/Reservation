@@ -3,6 +3,7 @@ package spharos.reservation.reservations.application;
 import static spharos.reservation.reservations.domain.ReservationState.PAYMENT_WAITING;
 import static spharos.reservation.reservations.domain.ReservationState.WAIT;
 
+import java.util.List;
 import java.util.Random;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,17 +43,6 @@ public class ReservationServiceImpl implements ReservationService {
                 request.getAddress(), PAYMENT_WAITING);
         commandGateway.send(createOrderCommand);
         return reservationNum;
-/*        .whenComplete((result, throwable) -> {
-            if (throwable != null) {
-                log.error("Failed to create order", throwable);
-            }
-            else{
-                log.info("Order created successfully");
-            }
-        });}*/
-        /*else{
-            throw new CustomException(ResponseCode.DUPLICATED_RESERVATION);
-        }*/
 
     }
 

@@ -1,5 +1,8 @@
 package spharos.reservation.reservations.axon.event.handler;
 
+import static spharos.reservation.global.common.response.ResponseCode.CANNOT_FIND_RESERVATION_GOODS;
+
+import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -30,12 +33,48 @@ public class ReservationEventHandler {
     public void create( ReservationCreateEvent event) {
         log.info("reservation_goods id={}", event.getServiceId());
         //예약 중복
-        Optional<Reservation> reservation = reservationRepository.findByReservationGoodsId(event.getReservationGoodsId());
+        List<Long> reservationGoodsIdList = event.getReservationGoodsId();
+        for (Long reservationGoodsId : reservationGoodsIdList) {
+            Optional<Reservation> existingReservation = reservationRepository.findByReservationGoodsId(reservationGoodsId);
+            if (existingReservation.isPresent()) {
+                throw new CustomException(ResponseCode.DUPLICATED_RESERVATION);
+            }
+        }
+
+/*        Optional<Reservation> reservation = reservationRepository.findByReservationGoodsId(event.getReservationGoodsId());
 
         if (reservation.isPresent()) {
             throw new CustomException(ResponseCode.DUPLICATED_RESERVATION);
+        }*/
+
+// 중복이 없으면 예약 생성
+        for (Long reservationGoodsId : reservationGoodsIdList) {
+            log.info("[saveOrder]");
+            log.info("getReservationGoodsId={}", reservationGoodsId);
+            ReservationGoods reservationGoods = reservationGoodsRepository.findById(reservationGoodsId)
+                    .orElseThrow(() -> new CustomException(CANNOT_FIND_RESERVATION_GOODS));
+
+            Reservation build = Reservation.builder()
+                    .reservationGoods(reservationGoods)
+                    .userEmail(event.getUserEmail())
+                    .serviceId(event.getServiceId())
+                    .workerId(event.getWorkerId())
+                    .reservationDate(event.getReservationDate())
+                    .serviceStart(event.getServiceStart())
+                    .serviceEnd(event.getServiceEnd())
+                    .reservationState(ReservationState.PAYMENT_WAITING)
+                    .paymentAmount(event.getPaymentAmount())
+                    .request(event.getRequest())
+                    .reservationNum(event.getReservationNum())
+                    .address(event.getAddress())
+                    .build();
+
+            reservationRepository.save(build);
         }
-        log.info("[saveOrder]");
+
+
+        ///
+     /*   log.info("[saveOrder]");
         log.info("getReservationGoodsId={}", event.getReservationGoodsId());
         ReservationGoods reservationGoods = reservationGoodsRepository.findById(event.getReservationGoodsId()).get();
         log.info("reservationGoodsgetId={}", reservationGoods.getId());
@@ -53,16 +92,18 @@ public class ReservationEventHandler {
                 .reservationNum(event.getReservationNum())
                 .address(event.getAddress())
                 .build();
-        reservationRepository.save(build);
+        reservationRepository.save(build);*/
 
     }
 
     @EventHandler
     public void changeStatusReservation(ChangeReservationStatusEvent event) {
         log.info("[changeStatusReservation]");
-        Reservation reservation = reservationRepository.findByReservationNumOne(event.getReservation_num());
-        reservation.changeStatus(event.getStatus());
-        reservationRepository.save(reservation);
+        List<Reservation> reservations = reservationRepository.findByReservationNumList(event.getReservation_num());
+        for (Reservation reservation : reservations) {
+            reservation.changeStatus(event.getStatus());
+            reservationRepository.save(reservation);
+        }
 
     }
 
