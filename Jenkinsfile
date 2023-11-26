@@ -9,10 +9,10 @@ pipeline {
 	stage('Secret-File Download'){
 	    steps {
 	        withCredentials([
-		    file(credentialsId: 'Wooyano-Secret-File', variable: 'secret')
+		    file(credentialsId: 'Reservation-Secret-File', variable: 'reservationSecret')
 		    ])
 		{
-		    sh "cp \$secret ./src/main/resources/application-secret.yml"
+		    sh "cp \$reservationSecret ./src/main/resources/application-secret.yml"
 		}
 	    }
 	}
@@ -41,7 +41,7 @@ pipeline {
         }
         stage('Deploy'){
             steps{
-                sh 'docker run -d --network spharos-network -e EUREKA_URL="${EUREKA_URL}" --name reservation-service reservation-service-img'
+                sh 'docker run -d --network spharos-network --restart=always -e EUREKA_URL="${EUREKA_URL}" --name reservation-service reservation-service-img'
 
             }
         }

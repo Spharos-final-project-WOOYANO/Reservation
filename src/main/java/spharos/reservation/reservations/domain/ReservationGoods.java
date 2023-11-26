@@ -4,12 +4,13 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import spharos.reservation.global.common.domain.BaseEntity;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "reservation_goods")
-public class ReservationGoods {
+public class ReservationGoods extends BaseEntity  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,5 +29,24 @@ public class ReservationGoods {
     private String baseCategory;
     @Column(length = 20, name = "sub_category")
     private String subCategory;
+
+    private ReservationGoods(Long serviceId,String serviceItemName, Integer price, Integer serviceTime,
+                             String superCategory, String baseCategory, String subCategory) {
+        this.serviceId = serviceId;
+        this.serviceItemName = serviceItemName;
+        this.price = price;
+        this.serviceTime = serviceTime;
+        this.superCategory = superCategory;
+        this.baseCategory = baseCategory;
+        this.subCategory = subCategory;
+    }
+
+    // 상품 등록
+    public static ReservationGoods createReservationGoods(Long serviceId, String serviceItemName, Integer price,
+                                                          Integer serviceTime, String superCategory,
+                                                          String baseCategory, String subCategory){
+        return new ReservationGoods(serviceId, serviceItemName, price, serviceTime, superCategory,
+                baseCategory, subCategory);
+    }
 
 }

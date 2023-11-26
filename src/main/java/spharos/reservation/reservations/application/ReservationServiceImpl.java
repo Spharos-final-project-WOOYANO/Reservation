@@ -2,127 +2,85 @@ package spharos.reservation.reservations.application;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.stereotype.Service;
-import spharos.reservation.dto.NewReservationDto;
-import spharos.reservation.global.common.response.ResponseCode;
-import spharos.reservation.global.exception.CustomException;
-import spharos.reservation.global.utill.AppConfig;
-import spharos.reservation.reservations.domain.Reservation;
-import spharos.reservation.reservations.domain.ReservationGoods;
-import spharos.reservation.reservations.domain.ReservationState;
-import spharos.reservation.reservations.infrastructure.ReservationGoodsRepository;
-import spharos.reservation.reservations.infrastructure.ReservationRepository;
-import spharos.reservation.reservations.vo.response.ReservationInfoForReviewResponse;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import spharos.reservation.reservations.axon.command.ChangeReservationStatusCommand;
+import spharos.reservation.reservations.axon.command.CreateReservationCommand;
+import spharos.reservation.reservations.dto.ChangeReservationRequest;
+import spharos.reservation.reservations.dto.CreateReservationDto;
+
+import java.util.Random;
+
+import static spharos.reservation.reservations.domain.ReservationState.PAYMENT_WAITING;
+import static spharos.reservation.reservations.domain.ReservationState.WAIT;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class ReservationServiceImpl implements ReservationService {
 
-    private final ReservationRepository reservationManageRepository;
-    private final ReservationGoodsRepository reservationGoodsRepository;
-    // 예약번호 생성
-    private final AppConfig appConfig;
-    // 최근 받은 서비스 조회
+    private final CommandGateway commandGateway;
+    private int randomStrLen= 10;
+
     @Override
-    public List<Long> getUserRecentService(String email) {
+    public String createReservation(CreateReservationDto request) {
+        log.info("request reservation good={}", request.getReservationGoodsId().getClass());
 
-        // 유저 이메일로 최신 예약 조회
-        List<Reservation> reservationList =
-                reservationManageRepository.findByUserEmailOrderByIdDesc(email);
+        String reservationNum = generateRandomReservationNum();
 
-        // 예약정보가 없는 경우에는 null을 리턴
-        if(reservationList.isEmpty()) {
-            return null;
-        }
-
-        List<Long> serviceIdList = new ArrayList<>();
-
-        Long serviceId = 0L;
-        int count = 0;
-        // 예약정보가 있는 경우, 예약번호가 동일하면 제외하고 8개만 리턴
-        for(Reservation reservation : reservationList) {
-
-            if(count > 7) {
-                break;
+        CreateReservationCommand createOrderCommand = new CreateReservationCommand(
+                request.getReservationGoodsId(), request.getServiceId(),
+                request.getWorkerId(), request.getUserEmail(),
+                request.getReservationDate(), request.getServiceStart(),
+                request.getServiceEnd(), request.getPaymentAmount(),
+                request.getRequest(), reservationNum,
+                request.getAddress(), PAYMENT_WAITING);
+        commandGateway.send(createOrderCommand);
+        return reservationNum;
+/*        .whenComplete((result, throwable) -> {
+            if (throwable != null) {
+                log.error("Failed to create order", throwable);
             }
-
-            // 서비스id가 같거나 서비스상태가 서비스완료가 아닌경우는 continue
-            if(serviceId.equals(reservation.getServiceId()) ||
-                    !reservation.getReservationState().equals(ReservationState.COMPLETE)) {
-                continue;
+            else{
+                log.info("Order created successfully");
             }
-            // 서비스id리스트에 추가
-            serviceIdList.add(reservation.getServiceId());
-            // 비교할 예약번호에 예약번호를 셋팅
-            serviceId = reservation.getServiceId();
-            // 카운트 증가
-            count++;
-        }
+        });}*/
+        /*else{
+            throw new CustomException(ResponseCode.DUPLICATED_RESERVATION);
+        }*/
 
-        return serviceIdList;
     }
 
-    // 리뷰의 예약정보 조회
     @Override
-    public List<ReservationInfoForReviewResponse> getReservationForReview(String reservationNum) {
+    public void changeReservationStatus(ChangeReservationRequest request) {
+        ChangeReservationStatusCommand changeReservationStatusCommand = new ChangeReservationStatusCommand
+                (request.getReservation_num(), WAIT,request.getClientEmail(),request.getPaymentType(),
+                        request.getTotalAmount(),request.getApprovedAt(),request.getPaymentStatus());
 
-        // 예약번호로 예약정보조회
-        List<Reservation> reservationList = reservationManageRepository.findByReservationNum(reservationNum);
+        commandGateway.send(changeReservationStatusCommand);
 
-        // 예약번호로 조회된 예약정보가 없는 경우 에러
-        if(reservationList.isEmpty()) {
-            throw new CustomException(ResponseCode.CANNOT_FIND_RESERVATION);
-        }
 
-        List<ReservationInfoForReviewResponse> responseList = new ArrayList<>();
-        for(Reservation reservation : reservationList) {
-            ReservationInfoForReviewResponse response = ReservationInfoForReviewResponse.builder()
-                    .serviceItemName(reservation.getReservationGoods().getServiceItemName())
-                    .reservationDate(reservation.getReservationDate())
-                    .workerId(reservation.getWorkerId())
-                    .build();
-            responseList.add(response);
-        }
-        return responseList;
-    }
-
-    //예약 신청
-    @Override
-    public void createNewReservation(NewReservationDto reservationDto){
-
-        //예약 상품이 존재하지 않을경우
-        Optional<ReservationGoods> reservationGoods = reservationGoodsRepository.findById(reservationDto.getReservationGoodsId());
-
-        if(reservationGoods.isEmpty()){
-            log.info("reservationGoods is empty");
-            throw new CustomException(ResponseCode.CANNOT_FIND_RESERVATION_GOODS);
-        }
-
-        ReservationGoods reservationServiceGoods = reservationGoods.get();
-
-        ReservationState reservationState = ReservationState.WAIT;
-
-        String reservationNumber = "WYN-" + AppConfig.getRandomValue();
-        log.info("reservationNumber : {}", reservationNumber);
-        Reservation reservation = Reservation.createReservation(
-                        reservationServiceGoods,
-                        reservationDto.getUserEmail(),
-                        reservationDto.getServiceId(),
-                        reservationDto.getWorkerId(),
-                        reservationDto.getReservationDate(),
-                        reservationDto.getServiceStart(),
-                        reservationDto.getServiceEnd(),
-                        reservationState,
-                        reservationDto.getPaymentAmount(),
-                        reservationDto.getRequest(),
-                        reservationNumber,
-                        reservationDto.getAddress());
-
-        reservationManageRepository.save(reservation);
 
     }
+
+
+    //랜덤 예약번호 생성
+    private String generateRandomReservationNum() {
+        Random random = new Random();
+        StringBuilder randomBuf = new StringBuilder();
+        for (int i = 0; i < randomStrLen; i++) {
+            // Random.nextBoolean() : 랜덤으로 true, false 리턴 (true : 랜덤 소문자 영어, false : 랜덤 숫자)
+            if (random.nextBoolean()) {
+                // 26 : a-z 알파벳 개수
+                // 97 : letter 'a' 아스키코드
+                // (int)(random.nextInt(26)) + 97 : 랜덤 소문자 아스키코드
+                randomBuf.append((char) ((int) (random.nextInt(26)) + 97));
+            } else {
+                randomBuf.append(random.nextInt(10));
+            }
+        }
+        return randomBuf.toString();
+    }
+
+
 }

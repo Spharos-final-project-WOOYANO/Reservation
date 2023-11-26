@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import spharos.reservation.reservations.dto.UserReservationDto;
 
 import java.util.List;
 
@@ -11,8 +12,11 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserRecentServiceResponse {
+public class UserReservationResponse {
 
-    private List<Long> serviceIdList;
+    private List<UserReservationDto> reservationDtoList;
+    private Integer page;
+    private Integer size;
+    private Long totalRows;
 
 }
