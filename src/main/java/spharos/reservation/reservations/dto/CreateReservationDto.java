@@ -2,6 +2,7 @@ package spharos.reservation.reservations.dto;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import lombok.*;
 
 
@@ -11,7 +12,7 @@ import lombok.*;
 @Getter
 public class CreateReservationDto {
 
-    private Long reservationGoodsId; //예약 상품id
+    private List<Long> reservationGoodsId; //예약 상품id
     private Long serviceId; //서비스id
     private Long workerId; //작업자id
     private String userEmail; //유저 이메일

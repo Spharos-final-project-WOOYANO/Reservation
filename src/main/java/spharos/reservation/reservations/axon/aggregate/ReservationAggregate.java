@@ -31,6 +31,7 @@ public class ReservationAggregate {
     @CommandHandler
     public ReservationAggregate(CreateReservationCommand command) {
         log.info("CreateReservationCommand");
+
         ReservationCreateEvent reservationCreateEvent = new ReservationCreateEvent(
                 command.getReservationGoodsId(), command.getServiceId(), command.getWorkerId(), command.getUserEmail(),
                 command.getReservationDate(), command.getServiceStart(), command.getServiceEnd(),
