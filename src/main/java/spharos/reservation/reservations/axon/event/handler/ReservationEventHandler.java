@@ -2,6 +2,7 @@ package spharos.reservation.reservations.axon.event.handler;
 
 import static spharos.reservation.global.common.response.ResponseCode.CANNOT_FIND_RESERVATION_GOODS;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
@@ -9,7 +10,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+import spharos.reservation.global.SseEmitters;
 import spharos.reservation.global.common.response.ResponseCode;
 import spharos.reservation.global.exception.CustomException;
 import spharos.reservation.reservations.axon.event.CancelReservationStatusEvent;
@@ -28,7 +32,7 @@ import spharos.reservation.reservations.infrastructure.ReservationRepository;
 public class ReservationEventHandler {
     private final ReservationRepository reservationRepository;
     private final ReservationGoodsRepository reservationGoodsRepository;
-
+    private final SseEmitters sseEmitters;
     @EventHandler
     public void create( ReservationCreateEvent event) {
         log.info("reservation_goods id={}", event.getServiceId());
@@ -112,6 +116,16 @@ public class ReservationEventHandler {
         log.info("[cancel]");
         Reservation byReservationNumOne = reservationRepository.findByReservationNumOne(event.getReservation_num());
         reservationRepository.delete(byReservationNumOne);
+        //프론트한테 PaymentKey 보내기-> 프론트가 PaymentKey로 결제 취소 요청
+        SseEmitter emitter = new SseEmitter();
+        sseEmitters.add(emitter);
+        try {
+            emitter.send(SseEmitter.event()
+                    .name("cancel")
+                    .data("{\"paymentKey\": \"" + event.getPaymentKey() + "\"}"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 }
