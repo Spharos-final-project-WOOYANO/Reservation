@@ -38,65 +38,39 @@ public class ReservationEventHandler {
         log.info("reservation_goods id={}", event.getServiceId());
         //예약 중복
         List<Long> reservationGoodsIdList = event.getReservationGoodsId();
+        Long workerId = event.getWorkerId();
         for (Long reservationGoodsId : reservationGoodsIdList) {
-            Optional<Reservation> existingReservation = reservationRepository.findByReservationGoodsId(reservationGoodsId);
+            Optional<Reservation> existingReservation = reservationRepository.findByReservationGoodsId(reservationGoodsId,workerId);
             if (existingReservation.isPresent()) {
                 throw new CustomException(ResponseCode.DUPLICATED_RESERVATION);
             }
         }
 
-/*        Optional<Reservation> reservation = reservationRepository.findByReservationGoodsId(event.getReservationGoodsId());
 
-        if (reservation.isPresent()) {
-            throw new CustomException(ResponseCode.DUPLICATED_RESERVATION);
-        }*/
+        // 중복이 없으면 예약 생성
+        reservationGoodsIdList.stream()
+                .map(reservationGoodsId -> {
+                    log.info("[saveOrder]");
+                    ReservationGoods reservationGoods = reservationGoodsRepository.findById(reservationGoodsId)
+                            .orElseThrow(() -> new CustomException(CANNOT_FIND_RESERVATION_GOODS));
 
-// 중복이 없으면 예약 생성
-        for (Long reservationGoodsId : reservationGoodsIdList) {
-            log.info("[saveOrder]");
-            log.info("getReservationGoodsId={}", reservationGoodsId);
-            ReservationGoods reservationGoods = reservationGoodsRepository.findById(reservationGoodsId)
-                    .orElseThrow(() -> new CustomException(CANNOT_FIND_RESERVATION_GOODS));
+                    return Reservation.builder()
+                            .reservationGoods(reservationGoods)
+                            .userEmail(event.getUserEmail())
+                            .serviceId(event.getServiceId())
+                            .workerId(event.getWorkerId())
+                            .reservationDate(event.getReservationDate())
+                            .serviceStart(event.getServiceStart())
+                            .serviceEnd(event.getServiceEnd())
+                            .reservationState(ReservationState.PAYMENT_WAITING)
+                            .paymentAmount(event.getPaymentAmount())
+                            .request(event.getRequest())
+                            .reservationNum(event.getReservationNum())
+                            .address(event.getAddress())
+                            .build();
+                })
+                .forEach(reservationRepository::save);
 
-            Reservation build = Reservation.builder()
-                    .reservationGoods(reservationGoods)
-                    .userEmail(event.getUserEmail())
-                    .serviceId(event.getServiceId())
-                    .workerId(event.getWorkerId())
-                    .reservationDate(event.getReservationDate())
-                    .serviceStart(event.getServiceStart())
-                    .serviceEnd(event.getServiceEnd())
-                    .reservationState(ReservationState.PAYMENT_WAITING)
-                    .paymentAmount(event.getPaymentAmount())
-                    .request(event.getRequest())
-                    .reservationNum(event.getReservationNum())
-                    .address(event.getAddress())
-                    .build();
-
-            reservationRepository.save(build);
-        }
-
-
-        ///
-     /*   log.info("[saveOrder]");
-        log.info("getReservationGoodsId={}", event.getReservationGoodsId());
-        ReservationGoods reservationGoods = reservationGoodsRepository.findById(event.getReservationGoodsId()).get();
-        log.info("reservationGoodsgetId={}", reservationGoods.getId());
-        Reservation build = Reservation.builder()
-                .reservationGoods(reservationGoods)
-                .userEmail(event.getUserEmail())
-                .serviceId(event.getServiceId())
-                .workerId(event.getWorkerId())
-                .reservationDate(event.getReservationDate())
-                .serviceStart(event.getServiceStart())
-                .serviceEnd(event.getServiceEnd())
-                .reservationState(ReservationState.PAYMENT_WAITING)
-                .paymentAmount(event.getPaymentAmount())
-                .request(event.getRequest())
-                .reservationNum(event.getReservationNum())
-                .address(event.getAddress())
-                .build();
-        reservationRepository.save(build);*/
 
     }
 
