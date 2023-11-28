@@ -39,11 +39,14 @@ public class ReservationEventHandler {
         //예약 중복
         List<Long> reservationGoodsIdList = event.getReservationGoodsId();
         Long workerId = event.getWorkerId();
-        for (Long reservationGoodsId : reservationGoodsIdList) {
-            Optional<Reservation> existingReservation = reservationRepository.findByReservationGoodsId(reservationGoodsId,workerId);
-            if (existingReservation.isPresent()) {
-                throw new CustomException(ResponseCode.DUPLICATED_RESERVATION);
-            }
+
+        boolean isDuplicate = reservationGoodsIdList.stream()
+                .anyMatch(reservationGoodsId ->
+                        reservationRepository.findByReservationGoodsId(reservationGoodsId, workerId)
+                                .isPresent());
+
+        if (isDuplicate) {
+            throw new CustomException(ResponseCode.DUPLICATED_RESERVATION);
         }
 
 
