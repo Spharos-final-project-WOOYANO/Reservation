@@ -15,8 +15,8 @@ import spharos.reservation.reservations.domain.ReservationState;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long>  {
 
-    @Query(value = "SELECT r FROM Reservation r WHERE r.reservationGoods.id = :reservationGoods and r.workerId = :workerId")
-    Optional<Reservation> findByReservationGoodsId(@Param("reservationGoods") Long reservationGoods,@Param("workerId") Long workerId);
+    @Query(value = "SELECT r FROM Reservation r WHERE r.reservationGoods.id = :reservationGoods")
+    Optional<Reservation> findByReservationGoodsId(@Param("reservationGoods") Long reservationGoods);
 
 
 

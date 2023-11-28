@@ -2,17 +2,14 @@ package spharos.reservation.reservations.axon.event.handler;
 
 import static spharos.reservation.global.common.response.ResponseCode.CANNOT_FIND_RESERVATION_GOODS;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-import spharos.reservation.global.SseEmitters;
 import spharos.reservation.global.common.response.ResponseCode;
 import spharos.reservation.global.exception.CustomException;
 import spharos.reservation.reservations.axon.event.CancelReservationStatusEvent;
@@ -31,18 +28,14 @@ import spharos.reservation.reservations.infrastructure.ReservationRepository;
 public class ReservationEventHandler {
     private final ReservationRepository reservationRepository;
     private final ReservationGoodsRepository reservationGoodsRepository;
-    private final SseEmitters sseEmitters;
-
 
     @EventHandler
     public void create( ReservationCreateEvent event) {
         log.info("reservation_goods id={}", event.getServiceId());
-        //예약 중복 - 해당 서비스 + 서비스 기사
+        //예약 중복
         List<Long> reservationGoodsIdList = event.getReservationGoodsId();
-        Long workId = event.getWorkerId();
-
         for (Long reservationGoodsId : reservationGoodsIdList) {
-            Optional<Reservation> existingReservation = reservationRepository.findByReservationGoodsId(reservationGoodsId,workId);
+            Optional<Reservation> existingReservation = reservationRepository.findByReservationGoodsId(reservationGoodsId);
             if (existingReservation.isPresent()) {
                 throw new CustomException(ResponseCode.DUPLICATED_RESERVATION);
             }
@@ -115,24 +108,11 @@ public class ReservationEventHandler {
     }
 
     @EventHandler
-    public ResponseEntity cancel(CancelReservationStatusEvent event){
+    public void cancel(CancelReservationStatusEvent event){
         log.info("[cancel]");
         Reservation byReservationNumOne = reservationRepository.findByReservationNumOne(event.getReservation_num());
         reservationRepository.delete(byReservationNumOne);
-        //프론트로 페이먼트 키 보냄 -> 결제 취소 api요청
-        SseEmitter emitter = new SseEmitter();
-        sseEmitters.add(emitter);
-        try {
-            emitter.send(SseEmitter.event()
-                    .name("cancel")
-                    .data("{\"paymentKey\": \"" + event.getPaymentKey() + "\"}"));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        log.info("emitter={}",emitter);
-        return ResponseEntity.ok(emitter);
+
     }
-
 }
-
 

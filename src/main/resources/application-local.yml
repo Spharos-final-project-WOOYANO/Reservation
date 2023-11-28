@@ -4,15 +4,10 @@ spring:
       on-profile: local
 
   datasource:
-    url : jdbc:mysql://localhost:3306/reservation?serverTimezone=Asia/Seoul
-    username: pjm
-    password: jmjm1102
+    url: jdbc:mysql://localhost:3306/test
+    username: root
+    password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
-  #  second-datasource:
-  #    jdbcUrl : jdbc:mysql://localhost:3306/payment?serverTimezone=Asia/Seoul
-  #    username: pjm
-  #    password: jmjm1102
-  #    driver-class-name: com.mysql.cj.jdbc.Driver
 
   data:
     redis:
@@ -20,11 +15,11 @@ spring:
       port: 6379
 
   jpa:
+    database: mysql
     hibernate:
       ddl-auto: update
-    properties:
-      hibernate:
-        format_sql: true
+      format_sql: true
+      show-sql: true
 
 springdoc:
   swagger-ui:
@@ -57,23 +52,3 @@ eureka:
 
   instance:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
-axon:
-  axonserver:
-    servers: 127.0.0.1:8124
-  serializer:
-    general: xstream
-  distributed:
-    enabled: true
-
-
-
-
-
-
-logging:
-  level:
-    com:
-      cqrs:
-        command : debug
-    org:
-      axonframework: debug

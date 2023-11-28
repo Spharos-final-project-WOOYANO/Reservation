@@ -12,7 +12,6 @@ import spharos.reservation.reservations.vo.response.ReservationInfoForReviewResp
 import spharos.reservation.reservations.vo.response.UserRecentServiceResponse;
 import spharos.reservation.reservations.vo.response.UserReservationDetailResponse;
 import spharos.reservation.reservations.vo.response.UserReservationResponse;
-
 import java.util.List;
 
 @Slf4j
@@ -64,8 +63,8 @@ public class UserReservationController {
             tags = { "User Mypage Service History" })
     @GetMapping("/list")
     public BaseResponse<?> getUserReservationList(@RequestHeader("email") String email,
-                                                  @RequestParam("state") String state,
-                                                  Pageable pageable) {
+                                                    @RequestParam("state") String state,
+                                                    Pageable pageable) {
 
         // 서비스내역 리스트 조회
         UserReservationResponse response = userReservationService.getUserReservationList(email, state, pageable);
@@ -86,7 +85,5 @@ public class UserReservationController {
         UserReservationDetailResponse response = userReservationService.getUserReservationDetail(email, reservationNum);
         return new BaseResponse<>(response);
     }
-
-
 
 }
