@@ -43,14 +43,14 @@ public class ReservationAggregate {
     public void on(ChangeReservationStatusCommand command){
         ChangeReservationStatusEvent changeReservationStatusEvent = new ChangeReservationStatusEvent(
                 command.getReservation_num(), command.getStatus(), command.getClientEmail(), command.getPaymentType(),
-                command.getTotalAmount(), command.getApprovedAt(), command.getPaymentStatus());
+                command.getTotalAmount(), command.getApprovedAt(), command.getPaymentStatus(),command.getPaymentKey());
         apply(changeReservationStatusEvent);
     }
 
     @CommandHandler
     public void change(CancelReservationCommand command){
         CancelReservationStatusEvent cancelReservationStatusEvent = new CancelReservationStatusEvent(
-                command.getReservationNum(),ReservationState.PAYMENT_CANCEL);
+                command.getReservationNum(),ReservationState.PAYMENT_CANCEL,command.getPaymentKey());
         apply(cancelReservationStatusEvent);
     }
 

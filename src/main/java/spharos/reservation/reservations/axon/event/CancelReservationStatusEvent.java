@@ -12,4 +12,5 @@ import spharos.reservation.reservations.domain.ReservationState;
 public class CancelReservationStatusEvent {
     private String reservation_num;
     private ReservationState status;
+    private String paymentKey;
 }
