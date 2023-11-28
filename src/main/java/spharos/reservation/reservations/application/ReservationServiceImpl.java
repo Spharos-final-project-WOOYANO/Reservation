@@ -50,7 +50,7 @@ public class ReservationServiceImpl implements ReservationService {
     public void changeReservationStatus(ChangeReservationRequest request) {
         ChangeReservationStatusCommand changeReservationStatusCommand = new ChangeReservationStatusCommand
                 (request.getReservation_num(), WAIT,request.getClientEmail(),request.getPaymentType(),
-                        request.getTotalAmount(),request.getApprovedAt(),request.getPaymentStatus());
+                        request.getTotalAmount(),request.getApprovedAt(),request.getPaymentStatus(),request.getPaymentKey());
 
         commandGateway.send(changeReservationStatusCommand);
 

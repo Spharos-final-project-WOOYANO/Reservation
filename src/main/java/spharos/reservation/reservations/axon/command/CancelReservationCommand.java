@@ -12,6 +12,6 @@ import spharos.reservation.reservations.domain.ReservationState;
 public class CancelReservationCommand {
     @TargetAggregateIdentifier
     private String reservationNum; //예약 번호
-
+    private String paymentKey; //결제 고유번호
 
     }
