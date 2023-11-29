@@ -17,7 +17,7 @@ import spharos.reservation.reservations.axon.command.CreateReservationCommand;
 import spharos.reservation.reservations.axon.event.CancelReservationStatusEvent;
 import spharos.reservation.reservations.axon.event.ChangeReservationStatusEvent;
 import spharos.reservation.reservations.axon.event.ReservationCreateEvent;
-import spharos.reservation.reservations.domain.ReservationState;
+import spharos.reservation.reservations.domain.enumPackage.ReservationState;
 
 @Aggregate
 @Slf4j
@@ -28,6 +28,7 @@ public class ReservationAggregate {
     private String reservation_num;
     private ReservationState reservationState;
 
+    //예약 생성
     @CommandHandler
     public ReservationAggregate(CreateReservationCommand command) {
         log.info("CreateReservationCommand");
@@ -39,16 +40,18 @@ public class ReservationAggregate {
                 command.getRequest(), command.getReservationNum(), command.getAddress(), command.getStatus());
         apply(reservationCreateEvent);
     }
+    //예약 상태 변경
     @CommandHandler
-    public void on(ChangeReservationStatusCommand command){
+    public void change(ChangeReservationStatusCommand command){
         ChangeReservationStatusEvent changeReservationStatusEvent = new ChangeReservationStatusEvent(
                 command.getReservation_num(), command.getStatus(), command.getClientEmail(), command.getPaymentType(),
                 command.getTotalAmount(), command.getApprovedAt(), command.getPaymentStatus(),command.getPaymentKey());
         apply(changeReservationStatusEvent);
     }
 
+    //예약 취소
     @CommandHandler
-    public void change(CancelReservationCommand command){
+    public void cancel(CancelReservationCommand command){
         CancelReservationStatusEvent cancelReservationStatusEvent = new CancelReservationStatusEvent(
                 command.getReservationNum(),ReservationState.PAYMENT_CANCEL,command.getPaymentKey());
         apply(cancelReservationStatusEvent);

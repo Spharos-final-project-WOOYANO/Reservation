@@ -1,4 +1,4 @@
-package spharos.reservation.reservations.domain;
+package spharos.reservation.reservations.domain.enumPackage;
 
 import jakarta.persistence.AttributeConverter;
 

@@ -6,8 +6,7 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.axonframework.modelling.command.TargetAggregateIdentifier;
-import spharos.reservation.reservations.domain.ReservationState;
+import spharos.reservation.reservations.domain.enumPackage.ReservationState;
 
 @Getter
 @AllArgsConstructor

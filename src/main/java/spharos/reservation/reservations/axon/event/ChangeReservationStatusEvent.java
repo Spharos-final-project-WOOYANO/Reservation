@@ -4,9 +4,7 @@ import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import spharos.reservation.reservations.axon.command.PaymentStatus;
-import spharos.reservation.reservations.axon.command.PaymentType;
-import spharos.reservation.reservations.domain.ReservationState;
+import spharos.reservation.reservations.domain.enumPackage.ReservationState;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,12 +13,12 @@ public class ChangeReservationStatusEvent {
     private String reservation_num;
     private ReservationState status;
 
-    private String clientEmail; //사업자 이메일
-    private String paymentType; //"0"
-    private int totalAmount; //결제 금액
-    private LocalDateTime approvedAt; //결제 완료,취소가 일어난 날짜와 시간 정보
-    private String paymentStatus; //"0"
+    private String clientEmail;
+    private String paymentType;
+    private int totalAmount;
+    private LocalDateTime approvedAt;
+    private String paymentStatus;
 
-    private String paymentKey; //결제 고유 번호
+    private String paymentKey;
 
 }

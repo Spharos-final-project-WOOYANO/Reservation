@@ -1,22 +1,22 @@
-package spharos.reservation.reservations.axon.command;
+package spharos.reservation.reservations.domain.enumPackage;
 
 import jakarta.persistence.AttributeConverter;
 import java.util.EnumSet;
 import java.util.NoSuchElementException;
 
-public class PaymentStatusConverter implements AttributeConverter<PaymentStatus, String> {
+public class PaymentTypeConverter implements AttributeConverter<PaymentType, String> {
 
     @Override
-    public String convertToDatabaseColumn(PaymentStatus attribute) {
+    public String convertToDatabaseColumn(PaymentType attribute) {
         return attribute.getCode();
     }
 
+
     @Override
-    public PaymentStatus convertToEntityAttribute(String dbData) {
-        return EnumSet.allOf(PaymentStatus.class).stream()
+    public PaymentType convertToEntityAttribute(String dbData) {
+        return EnumSet.allOf(PaymentType.class).stream()
                 .filter(c -> c.getCode().equals(dbData))
                 .findFirst()
                 .orElseThrow(() -> new NoSuchElementException("존재하지 않는 포인트 상태입니다."));
     }
-
 }

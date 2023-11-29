@@ -1,9 +1,10 @@
-package spharos.reservation.reservations.axon.command;
+package spharos.reservation.reservations.domain.enumPackage;
 
 
 import spharos.reservation.global.common.CodeValue;
 
 public enum PaymentType implements CodeValue {
+
     CARD("0","카드"),
     EASY_PAYMENT("1","간편결제");
 
@@ -24,5 +25,14 @@ public enum PaymentType implements CodeValue {
     @Override
     public String getValue() {
         return value;
+    }
+
+    public static PaymentType fromCode(String code) {
+        for (PaymentType type : values()) {
+            if (type.code.equals(code)) {
+                return type;
+            }
+        }
+        throw new IllegalArgumentException("No enum constant for code: " + code);
     }
 }

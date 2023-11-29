@@ -4,13 +4,10 @@ import static spharos.reservation.global.common.response.ResponseCode.CANNOT_FIN
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import spharos.reservation.global.SseEmitters;
@@ -21,7 +18,7 @@ import spharos.reservation.reservations.axon.event.ChangeReservationStatusEvent;
 import spharos.reservation.reservations.axon.event.ReservationCreateEvent;
 import spharos.reservation.reservations.domain.Reservation;
 import spharos.reservation.reservations.domain.ReservationGoods;
-import spharos.reservation.reservations.domain.ReservationState;
+import spharos.reservation.reservations.domain.enumPackage.ReservationState;
 import spharos.reservation.reservations.infrastructure.ReservationGoodsRepository;
 import spharos.reservation.reservations.infrastructure.ReservationRepository;
 

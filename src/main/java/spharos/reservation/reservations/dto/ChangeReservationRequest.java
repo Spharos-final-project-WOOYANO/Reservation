@@ -5,8 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import spharos.reservation.reservations.axon.command.PaymentStatus;
-import spharos.reservation.reservations.axon.command.PaymentType;
+
 
 @NoArgsConstructor
 @AllArgsConstructor

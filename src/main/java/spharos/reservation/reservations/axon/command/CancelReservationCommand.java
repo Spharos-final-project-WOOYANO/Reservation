@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.axonframework.modelling.command.TargetAggregateIdentifier;
-import spharos.reservation.reservations.domain.ReservationState;
 
 @AllArgsConstructor
 @NoArgsConstructor

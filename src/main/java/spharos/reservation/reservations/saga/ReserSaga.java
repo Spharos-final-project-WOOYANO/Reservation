@@ -42,16 +42,6 @@ public class ReserSaga {
         log.info("event: {}", event.getReservation_num());
 
 
-/*        commandGateway.send(
-                new SavePaymentCommand(UUID.randomUUID().toString(), event.getClientEmail(),event.getPaymentType()
-                        , event.getTotalAmount(), event.getApprovedAt(),event.getPaymentStatus())) .whenComplete((result, throwable) -> {
-                    if (throwable != null) {
-                        log.error(" [보상Transaction]", throwable);
-                    }
-                    else{
-                        log.info("Order created successfully");
-
-                    }});*/
 
         commandGateway.send(new SavePaymentCommand(UUID.randomUUID().toString(), event.getClientEmail(),event.getPaymentType()
                 , event.getTotalAmount(), event.getApprovedAt(),event.getPaymentStatus()), new CommandCallback<SavePaymentCommand, Object>() {
@@ -83,40 +73,6 @@ public class ReserSaga {
 
 
 }
-
-
-
-/*
-    @SagaEventHandler(associationProperty = "reservation_num")
-    public void handleSavePaymentEvent(PaymentSaveEvent event) {
-        log.info("[SagaEventHandler] handleSavePaymentEvent");
-        commandGateway.send(new SendReservationNotificationCommand(event.getReservation_num()) );
-    }
-*/
-
-
-
-
-
-/*    @SagaEventHandler(associationProperty = "reservation_num")
-    public void endSaga(CancelReservationStatusEvent event) {
-        log.info("[EndSaga] saga");
-        SagaLifecycle.end();
-    }*/
-
-
-
-
-
-/*
-    @SagaEventHandler(associationProperty = "reservation_num")
-    public void end(ChangeReservationStatusEvent event) {
-        log.info("[EndSaga] saga");
-
-    }
-*/
-
-
 
 
 

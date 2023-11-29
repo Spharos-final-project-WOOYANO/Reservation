@@ -1,7 +1,7 @@
 package spharos.reservation.reservations.application;
 
-import static spharos.reservation.reservations.domain.ReservationState.PAYMENT_WAITING;
-import static spharos.reservation.reservations.domain.ReservationState.WAIT;
+import static spharos.reservation.reservations.domain.enumPackage.ReservationState.PAYMENT_WAITING;
+import static spharos.reservation.reservations.domain.enumPackage.ReservationState.WAIT;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,20 +10,17 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.axonframework.commandhandling.gateway.CommandGateway;
-import org.axonframework.queryhandling.QueryGateway;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import spharos.reservation.reservations.axon.command.ChangeReservationStatusCommand;
 import spharos.reservation.reservations.axon.command.CreateReservationCommand;
 import spharos.reservation.reservations.domain.Reservation;
-import spharos.reservation.reservations.domain.ReservationState;
+import spharos.reservation.reservations.domain.enumPackage.ReservationState;
 import spharos.reservation.reservations.dto.ChangeReservationRequest;
 import spharos.reservation.reservations.dto.CreateReservationDto;
 import spharos.reservation.reservations.dto.ReservationDecision;
 import spharos.reservation.reservations.dto.ReservationListResponse;
-import spharos.reservation.reservations.infrastructure.ReservationGoodsRepository;
 import spharos.reservation.reservations.infrastructure.ReservationRepository;
 
 @Slf4j
@@ -31,13 +28,9 @@ import spharos.reservation.reservations.infrastructure.ReservationRepository;
 @Service
 public class ReservationServiceImpl implements ReservationService {
 
-    private final ReservationGoodsRepository reservationGoodsRepository;
     private final ReservationRepository reservationRepository;
     private final CommandGateway commandGateway;
-    private final QueryGateway queryGateway;
-
     private final ObjectMapper objectMapper;
-
     private int randomStrLen= 10;
 
     @Override
@@ -92,14 +85,9 @@ public class ReservationServiceImpl implements ReservationService {
                 )
                 .collect(Collectors.toList());
 
-
-
     }
 
-    @Override
-    public void reservationStatusChange(ReservationState reservationState, String reservationNum) {
 
-    }
 
     @Transactional
     @Override
@@ -112,9 +100,8 @@ public class ReservationServiceImpl implements ReservationService {
         log.info("reservationState1={}", reservationState1);
         Reservation byReservationNumOne = reservationRepository.findByReservationNumOne(reservationNum);
         byReservationNumOne.changeStatus(reservationState1);
-
-
     }
+
 
 
     //랜덤 예약번호 생성

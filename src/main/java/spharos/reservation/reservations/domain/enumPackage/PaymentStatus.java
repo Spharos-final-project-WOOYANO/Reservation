@@ -1,4 +1,4 @@
-package spharos.reservation.reservations.axon.command;
+package spharos.reservation.reservations.domain.enumPackage;
 
 
 import spharos.reservation.global.common.CodeValue;
@@ -25,5 +25,13 @@ public enum PaymentStatus implements CodeValue {
     @Override
     public String getValue() {
         return value;
+    }
+    public static PaymentStatus fromCode(String code) {
+        for (PaymentStatus status : values()) {
+            if (status.code.equals(code)) {
+                return status;
+            }
+        }
+        throw new IllegalArgumentException("No enum constant for code: " + code);
     }
 }

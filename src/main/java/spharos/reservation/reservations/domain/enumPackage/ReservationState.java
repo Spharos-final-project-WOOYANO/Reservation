@@ -1,4 +1,4 @@
-package spharos.reservation.reservations.domain;
+package spharos.reservation.reservations.domain.enumPackage;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
