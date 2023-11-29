@@ -1,5 +1,7 @@
 package spharos.reservation.reservations.domain;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 import spharos.reservation.global.common.CodeValue;
 
@@ -20,6 +22,30 @@ public enum ReservationState implements CodeValue {
     ReservationState(String code, String value) {
         this.code = code;
         this.value = value;
+    }
+    @JsonCreator
+    public static ReservationState fromCode(String code) {
+        for (ReservationState type : values()) {
+            if (type.code.equals(code)) {
+                return type;
+            }
+        }
+        throw new IllegalArgumentException("No enum constant for code: " + code);
+    }
+
+    @JsonCreator
+    public static ReservationState fromValue(String value) {
+        for (ReservationState type : values()) {
+            if (type.value.equals(value)) {
+                return type;
+            }
+        }
+        throw new IllegalArgumentException("No enum constant for value: " + value);
+    }
+
+    @JsonValue
+    public String getValue() {
+        return value;
     }
 
 }

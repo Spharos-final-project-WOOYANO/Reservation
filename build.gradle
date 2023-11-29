@@ -42,7 +42,9 @@ dependencies {
 	//axon
 	implementation group: 'org.axonframework', name: 'axon-spring-boot-starter', version: "$axonVersion"
 	implementation group: 'org.axonframework', name: 'axon-configuration', version: "$axonVersion"
-
+	//kafka
+	implementation 'org.springframework.kafka:spring-kafka'
+	testImplementation 'org.springframework.kafka:spring-kafka-test'
 }
 
 dependencyManagement {

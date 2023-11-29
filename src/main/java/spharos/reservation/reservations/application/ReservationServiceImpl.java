@@ -3,18 +3,28 @@ package spharos.reservation.reservations.application;
 import static spharos.reservation.reservations.domain.ReservationState.PAYMENT_WAITING;
 import static spharos.reservation.reservations.domain.ReservationState.WAIT;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.queryhandling.QueryGateway;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import spharos.reservation.reservations.axon.command.ChangeReservationStatusCommand;
 import spharos.reservation.reservations.axon.command.CreateReservationCommand;
+import spharos.reservation.reservations.domain.Reservation;
+import spharos.reservation.reservations.domain.ReservationState;
 import spharos.reservation.reservations.dto.ChangeReservationRequest;
 import spharos.reservation.reservations.dto.CreateReservationDto;
+import spharos.reservation.reservations.dto.ReservationDecision;
+import spharos.reservation.reservations.dto.ReservationListResponse;
 import spharos.reservation.reservations.infrastructure.ReservationGoodsRepository;
+import spharos.reservation.reservations.infrastructure.ReservationRepository;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -22,9 +32,11 @@ import spharos.reservation.reservations.infrastructure.ReservationGoodsRepositor
 public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationGoodsRepository reservationGoodsRepository;
+    private final ReservationRepository reservationRepository;
     private final CommandGateway commandGateway;
     private final QueryGateway queryGateway;
 
+    private final ObjectMapper objectMapper;
 
     private int randomStrLen= 10;
 
@@ -54,6 +66,52 @@ public class ReservationServiceImpl implements ReservationService {
 
         commandGateway.send(changeReservationStatusCommand);
 
+
+
+    }
+
+    @Override
+    public List<ReservationListResponse>  findWaitReservationsList(Long serviceId) {
+        return reservationRepository.findByReservationStatusWait(serviceId, WAIT)
+                .stream()
+                .map(reservation ->
+                        ReservationListResponse.builder()
+                                .reservationNum(reservation.getReservationNum())
+                                .reservationGoods(reservation.getReservationGoods())
+                                .serviceId(reservation.getServiceId())
+                                .workerId(reservation.getWorkerId())
+                                .userEmail(reservation.getUserEmail())
+                                .reservationDate(reservation.getReservationDate())
+                                .serviceStart(reservation.getServiceStart())
+                                .serviceEnd(reservation.getServiceEnd())
+                                .paymentAmount(reservation.getPaymentAmount())
+                                .request(reservation.getRequest())
+                                .reservationState(reservation.getReservationState())
+                                .address(reservation.getAddress())
+                                .build()
+                )
+                .collect(Collectors.toList());
+
+
+
+    }
+
+    @Override
+    public void reservationStatusChange(ReservationState reservationState, String reservationNum) {
+
+    }
+
+    @Transactional
+    @Override
+    public void processReservationDecisionEvent(String consumerRecord) throws JsonProcessingException {
+        ReservationDecision reservationDecision = objectMapper.readValue(consumerRecord, ReservationDecision.class);
+        String reservationNum = reservationDecision.getReservationNum();
+        String reservationState = reservationDecision.getReservationState();
+        ReservationState reservationState1 = ReservationState.fromValue(reservationState);
+        log.info("reservationNum={}", reservationNum);
+        log.info("reservationState1={}", reservationState1);
+        Reservation byReservationNumOne = reservationRepository.findByReservationNumOne(reservationNum);
+        byReservationNumOne.changeStatus(reservationState1);
 
 
     }
