@@ -1,0 +1,118 @@
+package spharos.reservation.global.config.kafka.consumer;
+
+import static org.apache.kafka.clients.CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG;
+
+import java.util.Properties;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.common.serialization.StringDeserializer;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.kafka.annotation.EnableKafka;
+
+@Configuration
+@Slf4j
+@EnableKafka
+public class ConsumerConfiguration {
+
+
+
+    /*public ConsumerConfiguration(KafkaProperties properties) {
+        this.properties = properties;
+    }*/
+    @Value("${spring.kafka.consumer.bootstrap-servers}")
+    private String bootstrapServers;
+
+/*    @Value("${topics.retry:library-events.RETRY}")
+    private String retryTopic;
+
+    @Value("${topics.dlt:library-events.DLT}")
+    private String deadLetterTopic;*/
+
+    @Bean
+    public Properties stringConsumerConfigs() {
+        Properties props = new Properties();
+        props.put(BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, "reservation");
+      //  props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+      //  props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "500");
+        return props;
+    }
+
+/*    @Bean
+    public ConsumerFactory<String, String> stringConsumerFactory() {
+        return new DefaultKafkaConsumerFactory<>(stringConsumerConfigs());
+    }*/
+
+/*    @Bean
+    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, String> factory =
+                new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(stringConsumerFactory());
+        //factory.setBatchListener(true);
+        factory.setConcurrency(1);
+    //    factory.setCommonErrorHandler(errorHandler());
+        return factory;
+    }*/
+
+/*    private DefaultErrorHandler errorHandler() {
+        var fixedBackOff = new FixedBackOff(1000L, 2L);
+        DefaultErrorHandler defaultErrorHandler = new DefaultErrorHandler(
+                publishingRecover(),
+                fixedBackOff
+        );
+        defaultErrorHandler.setRetryListeners(
+                (record, ex, deliveryAttempt) ->
+                        log.info("Failed Record in Retry Listener  exception : {} , deliveryAttempt : {} ", ex.getMessage(), deliveryAttempt)
+        );  //메서드를 사용하여 재시도 중에 발생한 이벤트를 리스닝하는 리스너를 설정
+        return defaultErrorHandler;
+    }
+
+    private DeadLetterPublishingRecoverer publishingRecover() {
+        DeadLetterPublishingRecoverer recoverer = new DeadLetterPublishingRecoverer(kafkaTemplate
+                , (r, e) -> {
+          //  log.error("Exception in publishingRecoverer : {} ", e.getMessage(), e);
+            if (e.getCause() instanceof RecoverableDataAccessException) {
+                return new TopicPartition(retryTopic, r.partition());
+            } else {
+                return new TopicPartition(deadLetterTopic, r.partition());
+            }
+        }
+        );
+
+        return recoverer;
+    }*/
+
+/*    @Bean
+    public Map<String, Object> DTOConsumerConfigs() {
+
+        Map<String, Object> props = new HashMap<>();
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+     //   props.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
+     //   props.put(JsonDeserializer.VALUE_DEFAULT_TYPE, "spharos.settle.dto.PaymentResult");
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, "settle");
+        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+        props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "500");
+        return props;
+    }
+
+    @Bean
+    public ConsumerFactory<String, PaymentResult> DTOConsumerFactory() {
+        return new DefaultKafkaConsumerFactory<>(DTOConsumerConfigs(),  new StringDeserializer(),
+                new JsonDeserializer<>(PaymentResult.class,false));
+    }
+
+    @Bean("DTOKafkaListenerContainerFactory")
+    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, PaymentResult>> DTOKafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, PaymentResult> factory =
+                new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(DTOConsumerFactory());
+      //  factory.setBatchListener(true);
+        return factory;
+    }*/
+}

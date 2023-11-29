@@ -35,7 +35,7 @@ public class ReservationEventHandler {
     private final SseEmitters sseEmitters;
     @EventHandler
     public void create( ReservationCreateEvent event) {
-        log.info("reservation_goods id={}", event.getServiceId());
+        log.info("[saveReservation]");
         //예약 중복
         List<Long> reservationGoodsIdList = event.getReservationGoodsId();
         Long workerId = event.getWorkerId();

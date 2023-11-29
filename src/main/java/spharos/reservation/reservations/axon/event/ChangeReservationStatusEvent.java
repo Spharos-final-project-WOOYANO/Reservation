@@ -1,6 +1,5 @@
 package spharos.reservation.reservations.axon.event;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
