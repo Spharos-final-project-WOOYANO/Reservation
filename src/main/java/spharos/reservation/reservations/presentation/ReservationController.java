@@ -1,7 +1,9 @@
 package spharos.reservation.reservations.presentation;
 
 import io.swagger.v3.oas.annotations.Operation;
+import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import spharos.reservation.global.common.response.BaseResponse;
 import spharos.reservation.global.common.response.ResponseCode;
 import spharos.reservation.global.exception.CustomException;
@@ -61,6 +64,5 @@ public class ReservationController {
         return reservationService.findWaitReservationsList(serviceId);
 
     }
-
 
 }

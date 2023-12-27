@@ -59,8 +59,6 @@ public class ReservationServiceImpl implements ReservationService {
 
         commandGateway.send(changeReservationStatusCommand);
 
-
-
     }
 
     @Override

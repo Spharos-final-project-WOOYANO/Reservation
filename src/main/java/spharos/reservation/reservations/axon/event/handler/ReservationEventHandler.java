@@ -10,7 +10,6 @@ import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-import spharos.reservation.global.SseEmitters;
 import spharos.reservation.global.common.response.ResponseCode;
 import spharos.reservation.global.exception.CustomException;
 import spharos.reservation.reservations.axon.event.CancelReservationStatusEvent;
@@ -21,6 +20,7 @@ import spharos.reservation.reservations.domain.ReservationGoods;
 import spharos.reservation.reservations.domain.enumPackage.ReservationState;
 import spharos.reservation.reservations.infrastructure.ReservationGoodsRepository;
 import spharos.reservation.reservations.infrastructure.ReservationRepository;
+import spharos.reservation.reservations.presentation.ReservationController;
 
 @Slf4j
 @Component
@@ -29,7 +29,8 @@ import spharos.reservation.reservations.infrastructure.ReservationRepository;
 public class ReservationEventHandler {
     private final ReservationRepository reservationRepository;
     private final ReservationGoodsRepository reservationGoodsRepository;
-    private final SseEmitters sseEmitters;
+
+    private final ReservationController sseController;
     @EventHandler
     public void create( ReservationCreateEvent event) {
         log.info("[saveReservation]");
@@ -90,16 +91,6 @@ public class ReservationEventHandler {
         log.info("[cancel]");
         Reservation byReservationNumOne = reservationRepository.findByReservationNumOne(event.getReservation_num());
         reservationRepository.delete(byReservationNumOne);
-        //프론트한테 PaymentKey 보내기-> 프론트가 PaymentKey로 결제 취소 요청
-        SseEmitter emitter = new SseEmitter();
-        sseEmitters.add(emitter);
-        try {
-            emitter.send(SseEmitter.event()
-                    .name("cancel")
-                    .data("{\"paymentKey\": \"" + event.getPaymentKey() + "\"}"));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
 
     }
 }
