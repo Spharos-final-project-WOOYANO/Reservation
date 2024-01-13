@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.axonframework.modelling.command.TargetAggregateIdentifier;
-import spharos.reservation.reservations.domain.enumPackage.ReservationState;
+import spharos.reservation.reservations.domain.enumPackage.ReservationStatus;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -14,7 +14,7 @@ public class ChangeReservationStatusCommand {
     @TargetAggregateIdentifier
     private String reservation_num;
 
-    private ReservationState status;
+    private ReservationStatus status;
     private String clientEmail; //사업자 이메일
     private String paymentType; //"0"
     private int totalAmount; //결제 금액

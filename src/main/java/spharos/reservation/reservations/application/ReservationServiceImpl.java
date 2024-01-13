@@ -1,13 +1,12 @@
 package spharos.reservation.reservations.application;
 
-import static spharos.reservation.reservations.domain.enumPackage.ReservationState.PAYMENT_WAITING;
-import static spharos.reservation.reservations.domain.enumPackage.ReservationState.WAIT;
+import static spharos.reservation.reservations.domain.enumPackage.ReservationStatus.PAYMENT_WAITING;
+import static spharos.reservation.reservations.domain.enumPackage.ReservationStatus.WAIT;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.gateway.CommandGateway;
@@ -16,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import spharos.reservation.reservations.axon.command.ChangeReservationStatusCommand;
 import spharos.reservation.reservations.axon.command.CreateReservationCommand;
 import spharos.reservation.reservations.domain.Reservation;
-import spharos.reservation.reservations.domain.enumPackage.ReservationState;
+import spharos.reservation.reservations.domain.enumPackage.ReservationStatus;
 import spharos.reservation.reservations.dto.ChangeReservationRequest;
 import spharos.reservation.reservations.dto.CreateReservationDto;
 import spharos.reservation.reservations.dto.ReservationDecision;
@@ -63,7 +62,8 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public List<ReservationListResponse>  findWaitReservationsList(Long serviceId) {
-        return reservationRepository.findByReservationStatusWait(serviceId, WAIT)
+        return  null;
+                /*reservationRepository.findByReservationStatusWait(serviceId, WAIT)
                 .stream()
                 .map(reservation ->
                         ReservationListResponse.builder()
@@ -81,7 +81,7 @@ public class ReservationServiceImpl implements ReservationService {
                                 .address(reservation.getAddress())
                                 .build()
                 )
-                .collect(Collectors.toList());
+                .collect(Collectors.toList());*/
 
     }
 
@@ -93,11 +93,11 @@ public class ReservationServiceImpl implements ReservationService {
         ReservationDecision reservationDecision = objectMapper.readValue(consumerRecord, ReservationDecision.class);
         String reservationNum = reservationDecision.getReservationNum();
         String reservationState = reservationDecision.getReservationState();
-        ReservationState reservationState1 = ReservationState.fromValue(reservationState);
+        ReservationStatus reservationState1 = ReservationStatus.fromValue(reservationState);
         log.info("reservationNum={}", reservationNum);
         log.info("reservationState1={}", reservationState1);
-        Reservation byReservationNumOne = reservationRepository.findByReservationNumOne(reservationNum);
-        byReservationNumOne.changeStatus(reservationState1);
+       // Reservation byReservationNumOne = reservationRepository.findByReservationNumOne(reservationNum);
+       // byReservationNumOne.changeStatus(reservationState1);
     }
 
 

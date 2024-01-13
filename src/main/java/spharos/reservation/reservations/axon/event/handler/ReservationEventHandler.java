@@ -1,15 +1,14 @@
+/*
 package spharos.reservation.reservations.axon.event.handler;
 
 import static spharos.reservation.global.common.response.ResponseCode.CANNOT_FIND_RESERVATION_GOODS;
 
-import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import spharos.reservation.global.common.response.ResponseCode;
 import spharos.reservation.global.exception.CustomException;
 import spharos.reservation.reservations.axon.event.CancelReservationStatusEvent;
@@ -17,7 +16,7 @@ import spharos.reservation.reservations.axon.event.ChangeReservationStatusEvent;
 import spharos.reservation.reservations.axon.event.ReservationCreateEvent;
 import spharos.reservation.reservations.domain.Reservation;
 import spharos.reservation.reservations.domain.ReservationGoods;
-import spharos.reservation.reservations.domain.enumPackage.ReservationState;
+import spharos.reservation.reservations.domain.enumPackage.ReservationStatus;
 import spharos.reservation.reservations.infrastructure.ReservationGoodsRepository;
 import spharos.reservation.reservations.infrastructure.ReservationRepository;
 import spharos.reservation.reservations.presentation.ReservationController;
@@ -63,7 +62,7 @@ public class ReservationEventHandler {
                             .reservationDate(event.getReservationDate())
                             .serviceStart(event.getServiceStart())
                             .serviceEnd(event.getServiceEnd())
-                            .reservationState(ReservationState.PAYMENT_WAITING)
+                            .reservationState(ReservationStatus.PAYMENT_WAITING)
                             .paymentAmount(event.getPaymentAmount())
                             .request(event.getRequest())
                             .reservationNum(event.getReservationNum())
@@ -95,3 +94,4 @@ public class ReservationEventHandler {
     }
 }
 
+*/

@@ -4,8 +4,8 @@ import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import spharos.reservation.reservations.domain.enumPackage.PaymentMethod;
 import spharos.reservation.reservations.domain.enumPackage.PaymentStatus;
-import spharos.reservation.reservations.domain.enumPackage.PaymentType;
 
 
 @AllArgsConstructor
@@ -16,7 +16,7 @@ public class PaymentSaveEvent {
     private String reservation_num;
 
     private String clientEmail;
-    private PaymentType paymentType;
+    private PaymentMethod paymentType;
     private int totalAmount;
     private LocalDateTime approvedAt;
     private PaymentStatus paymentStatus;

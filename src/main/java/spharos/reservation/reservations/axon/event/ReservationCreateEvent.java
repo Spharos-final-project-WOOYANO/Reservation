@@ -6,7 +6,7 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import spharos.reservation.reservations.domain.enumPackage.ReservationState;
+import spharos.reservation.reservations.domain.enumPackage.ReservationStatus;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,5 +24,5 @@ public class ReservationCreateEvent {
     private String request; //요청사항
     private String reservationNum; //예약 번호
     private String address; //주소
-    private ReservationState status; //예약 상태
+    private ReservationStatus status; //예약 상태
 }

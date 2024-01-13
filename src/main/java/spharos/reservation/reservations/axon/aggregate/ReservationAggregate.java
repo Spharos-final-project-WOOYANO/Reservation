@@ -17,7 +17,7 @@ import spharos.reservation.reservations.axon.command.CreateReservationCommand;
 import spharos.reservation.reservations.axon.event.CancelReservationStatusEvent;
 import spharos.reservation.reservations.axon.event.ChangeReservationStatusEvent;
 import spharos.reservation.reservations.axon.event.ReservationCreateEvent;
-import spharos.reservation.reservations.domain.enumPackage.ReservationState;
+import spharos.reservation.reservations.domain.enumPackage.ReservationStatus;
 
 @Aggregate
 @Slf4j
@@ -26,7 +26,7 @@ public class ReservationAggregate {
 
     @AggregateIdentifier
     private String reservation_num;
-    private ReservationState reservationState;
+    private ReservationStatus reservationState;
 
     //예약 생성
     @CommandHandler
@@ -53,7 +53,7 @@ public class ReservationAggregate {
     @CommandHandler
     public void cancel(CancelReservationCommand command){
         CancelReservationStatusEvent cancelReservationStatusEvent = new CancelReservationStatusEvent(
-                command.getReservationNum(),ReservationState.PAYMENT_CANCEL,command.getPaymentKey());
+                command.getReservationNum(), ReservationStatus.PAYMENT_CANCEL,command.getPaymentKey());
         apply(cancelReservationStatusEvent);
     }
 

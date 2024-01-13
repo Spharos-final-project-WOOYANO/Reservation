@@ -8,7 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import spharos.reservation.reservations.domain.ReservationGoods;
-import spharos.reservation.reservations.domain.enumPackage.ReservationState;
+import spharos.reservation.reservations.domain.enumPackage.ReservationStatus;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,7 +23,7 @@ public class ReservationListResponse {
     private LocalDate reservationDate;
     private LocalTime serviceStart;
     private LocalTime serviceEnd;
-    private ReservationState reservationState;
+    private ReservationStatus reservationState;
     private Integer paymentAmount;
     private String cancelDesc;
     private String request;
