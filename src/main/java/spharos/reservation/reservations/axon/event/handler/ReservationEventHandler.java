@@ -1,4 +1,3 @@
-/*
 package spharos.reservation.reservations.axon.event.handler;
 
 import static spharos.reservation.global.common.response.ResponseCode.CANNOT_FIND_RESERVATION_GOODS;
@@ -31,67 +30,25 @@ public class ReservationEventHandler {
 
     private final ReservationController sseController;
     @EventHandler
-    public void create( ReservationCreateEvent event) {
+    public void create(ReservationCreateEvent event) {
         log.info("[saveReservation]");
-        //예약 중복
-        List<Long> reservationGoodsIdList = event.getReservationGoodsId();
-        Long workerId = event.getWorkerId();
-
-        boolean isDuplicate = reservationGoodsIdList.stream()
-                .anyMatch(reservationGoodsId ->
-                        reservationRepository.findByReservationGoodsId(reservationGoodsId, workerId)
-                                .isPresent());
-
-        if (isDuplicate) {
-            throw new CustomException(ResponseCode.DUPLICATED_RESERVATION);
-        }
-
-
-        // 중복이 없으면 예약 생성
-        reservationGoodsIdList.stream()
-                .map(reservationGoodsId -> {
-                    log.info("[saveOrder]");
-                    ReservationGoods reservationGoods = reservationGoodsRepository.findById(reservationGoodsId)
-                            .orElseThrow(() -> new CustomException(CANNOT_FIND_RESERVATION_GOODS));
-
-                    return Reservation.builder()
-                            .reservationGoods(reservationGoods)
-                            .userEmail(event.getUserEmail())
-                            .serviceId(event.getServiceId())
-                            .workerId(event.getWorkerId())
-                            .reservationDate(event.getReservationDate())
-                            .serviceStart(event.getServiceStart())
-                            .serviceEnd(event.getServiceEnd())
-                            .reservationState(ReservationStatus.PAYMENT_WAITING)
-                            .paymentAmount(event.getPaymentAmount())
-                            .request(event.getRequest())
-                            .reservationNum(event.getReservationNum())
-                            .address(event.getAddress())
-                            .build();
-                })
-                .forEach(reservationRepository::save);
+        List<ReservationGoods> reservationGoods = reservationGoodsRepository.findByIdIn(event.getReservationGoodsId());
+        Reservation reservations = Reservation.createReservation(reservationGoods, event.getUserEmail(),
+                event.getServiceId(), event.getWorkerId(), event.getReservationDate(), event.getServiceStart(),
+                event.getAmount(),null, event.getRequest(), event.getAddress(), event.getOrderId(),event.getApprovedAt());
+        reservationRepository.save(reservations);
 
 
     }
 
     @EventHandler
     public void changeStatusReservation(ChangeReservationStatusEvent event) {
-        log.info("[changeStatusReservation]");
-        List<Reservation> reservations = reservationRepository.findByReservationNumList(event.getReservation_num());
-        for (Reservation reservation : reservations) {
-            reservation.changeStatus(event.getStatus());
-            reservationRepository.save(reservation);
-        }
 
     }
 
     @EventHandler
     public void cancel(CancelReservationStatusEvent event){
-        log.info("[cancel]");
-        Reservation byReservationNumOne = reservationRepository.findByReservationNumOne(event.getReservation_num());
-        reservationRepository.delete(byReservationNumOne);
 
     }
 }
 
-*/

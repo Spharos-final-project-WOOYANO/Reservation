@@ -3,6 +3,7 @@ package spharos.reservation.reservations.axon.aggregate;
 
 
 import static org.axonframework.modelling.command.AggregateLifecycle.apply;
+import static spharos.reservation.reservations.domain.enumPackage.ReservationStatus.WAIT;
 
 
 import lombok.NoArgsConstructor;
@@ -25,7 +26,7 @@ import spharos.reservation.reservations.domain.enumPackage.ReservationStatus;
 public class ReservationAggregate {
 
     @AggregateIdentifier
-    private String reservation_num;
+    private String orderId;
     private ReservationStatus reservationState;
 
     //예약 생성
@@ -34,10 +35,10 @@ public class ReservationAggregate {
         log.info("CreateReservationCommand");
 
         ReservationCreateEvent reservationCreateEvent = new ReservationCreateEvent(
-                command.getReservationGoodsId(), command.getServiceId(), command.getWorkerId(), command.getUserEmail(),
-                command.getReservationDate(), command.getServiceStart(), command.getServiceEnd(),
-                command.getPaymentAmount(),
-                command.getRequest(), command.getReservationNum(), command.getAddress(), command.getStatus());
+                command.getOrderId(), command.getAmount(), command.getServiceId(), command.getUserEmail(),
+                command.getReservationDate(), command.getRequest(), command.getAddress(), command.getServiceStart(),
+                command.getWorkerId(), command.getReservationGoodsId(), command.getApprovedAt()
+        );
         apply(reservationCreateEvent);
     }
     //예약 상태 변경
@@ -66,8 +67,7 @@ public class ReservationAggregate {
     @EventSourcingHandler
     public void createOrder(ReservationCreateEvent event) {
         log.info("ReservationCreateEvent");
-        this.reservation_num = event.getReservationNum();
-        this.reservationState = event.getStatus();
+        this.orderId = "reservation " + event.getOrderId();
     }
 
     @EventSourcingHandler

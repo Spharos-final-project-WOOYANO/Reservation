@@ -25,8 +25,8 @@ public enum ResponseCode {
 
    
     INCORRECT_RESERVATION_STATE(HttpStatus.OK, false, 3030, "잘못된 예약상태입니다."),
-    WRONG_APPROACH(HttpStatus.OK, false, 3040, "잘못된 접근입니다.");
-
+    WRONG_APPROACH(HttpStatus.OK, false, 3040, "잘못된 접근입니다."),
+    PAYMENT_AMOUNT_MISMATCH(HttpStatus.OK, false, 3050, "결제 금액이 일치하지 않습니다.");
 
 
 

@@ -1,6 +1,7 @@
 package spharos.reservation.reservations.axon.event;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -13,16 +14,16 @@ import spharos.reservation.reservations.domain.enumPackage.ReservationStatus;
 @Getter
 public class ReservationCreateEvent {
 
-    private List<Long> reservationGoodsId; //예약 상품id
-    private Long serviceId; //서비스id
-    private Long workerId; //작업자id
-    private String userEmail; //유저 이메일
-    private LocalDate reservationDate; //예약 날짜
-    private LocalTime serviceStart; // 서비스 시작 시간
-    private LocalTime serviceEnd;  // 서비스 종료 시간
-    private Integer paymentAmount; //결제 금액
-    private String request; //요청사항
-    private String reservationNum; //예약 번호
-    private String address; //주소
-    private ReservationStatus status; //예약 상태
+    private String orderId;
+    private int amount;
+    private Long serviceId;
+    private String userEmail;
+    private LocalDate reservationDate;
+    private String request;
+    private String address;
+    private LocalTime serviceStart;
+    private Long workerId;
+    private List<Long> reservationGoodsId;
+    private LocalDateTime approvedAt;
+
 }

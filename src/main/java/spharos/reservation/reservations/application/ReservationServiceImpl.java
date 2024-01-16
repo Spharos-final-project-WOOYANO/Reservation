@@ -1,23 +1,22 @@
 package spharos.reservation.reservations.application;
 
-import static spharos.reservation.reservations.domain.enumPackage.ReservationStatus.PAYMENT_WAITING;
+import static spharos.reservation.global.common.response.ResponseCode.PAYMENT_AMOUNT_MISMATCH;
 import static spharos.reservation.reservations.domain.enumPackage.ReservationStatus.WAIT;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
-import java.util.Random;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import spharos.reservation.global.config.redis.RedisService;
+import spharos.reservation.global.exception.CustomException;
 import spharos.reservation.reservations.axon.command.ChangeReservationStatusCommand;
-import spharos.reservation.reservations.axon.command.CreateReservationCommand;
-import spharos.reservation.reservations.domain.Reservation;
 import spharos.reservation.reservations.domain.enumPackage.ReservationStatus;
 import spharos.reservation.reservations.dto.ChangeReservationRequest;
-import spharos.reservation.reservations.dto.CreateReservationDto;
 import spharos.reservation.reservations.dto.ReservationDecision;
 import spharos.reservation.reservations.dto.ReservationListResponse;
 import spharos.reservation.reservations.infrastructure.ReservationRepository;
@@ -30,25 +29,37 @@ public class ReservationServiceImpl implements ReservationService {
     private final ReservationRepository reservationRepository;
     private final CommandGateway commandGateway;
     private final ObjectMapper objectMapper;
-    private int randomStrLen= 10;
+    private final RedisService redisService;
 
-    @Override
-    public String createReservation(CreateReservationDto request) {
-        log.info("request reservation good={}", request.getReservationGoodsId().getClass());
 
-        String reservationNum = generateRandomReservationNum();
 
-        CreateReservationCommand createOrderCommand = new CreateReservationCommand(
-                request.getReservationGoodsId(), request.getServiceId(),
-                request.getWorkerId(), request.getUserEmail(),
-                request.getReservationDate(), request.getServiceStart(),
-                request.getServiceEnd(), request.getPaymentAmount(),
-                request.getRequest(), reservationNum,
-                request.getAddress(), PAYMENT_WAITING);
-        commandGateway.send(createOrderCommand);
-        return reservationNum;
-
+    public void verifyPayment(String orderId, int amount) {
+        String values = redisService.getValues(orderId);
+        int saveAmount= Integer.parseInt(values);
+        if (!Objects.equals(saveAmount, amount)) {
+            throw new CustomException(PAYMENT_AMOUNT_MISMATCH);
+        }
     }
+
+
+ /*   public ReservationResponse createReservationCommand(String paymentKey, String orderId, int amount,
+                                                        Long serviceId, Long workerId, String userEmail,
+                                                        LocalDate reservationDate, String request, String address,
+                                                        String clientEmail, LocalTime serviceStart,
+                                                        List<Long> reservationGoodsId) {
+
+        CreateReservationCommand createReservationCommand = new CreateReservationCommand(paymentKey, orderId, amount,
+                serviceId, workerId, userEmail, reservationDate, request, address, clientEmail, serviceStart, reservationGoodsId);
+
+        commandGateway.send(createReservationCommand);
+
+    }*/
+
+
+
+
+
+
 
     @Override
     public void changeReservationStatus(ChangeReservationRequest request) {
@@ -102,23 +113,6 @@ public class ReservationServiceImpl implements ReservationService {
 
 
 
-    //랜덤 예약번호 생성
-    private String generateRandomReservationNum() {
-        Random random = new Random();
-        StringBuilder randomBuf = new StringBuilder();
-        for (int i = 0; i < randomStrLen; i++) {
-            // Random.nextBoolean() : 랜덤으로 true, false 리턴 (true : 랜덤 소문자 영어, false : 랜덤 숫자)
-            if (random.nextBoolean()) {
-                // 26 : a-z 알파벳 개수
-                // 97 : letter 'a' 아스키코드
-                // (int)(random.nextInt(26)) + 97 : 랜덤 소문자 아스키코드
-                randomBuf.append((char) ((int) (random.nextInt(26)) + 97));
-            } else {
-                randomBuf.append(random.nextInt(10));
-            }
-        }
-        return randomBuf.toString();
-    }
 
 
 }

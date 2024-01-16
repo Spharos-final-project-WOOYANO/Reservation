@@ -14,5 +14,8 @@ public interface ReservationGoodsRepository extends JpaRepository<ReservationGoo
     Optional<ReservationGoods> findById(Long id);
     List<ReservationGoods> findByServiceIdOrderByIdDesc(Long serviceId);
 
+    List<ReservationGoods> findByIdIn(List<Long> reservationGoodsIdList);
+
+
 
 }
